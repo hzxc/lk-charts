@@ -1,0 +1,11 @@
+p{
+    text-align: center
+}
+.number{
+    position:absolute;
+    left:30px;
+    top:30%; 
+}
+.container{
+    padding-top:10%; 
+}

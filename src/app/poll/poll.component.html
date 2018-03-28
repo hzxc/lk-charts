@@ -1,0 +1,22 @@
+<div fxFlexOffset="5" fxFlex="45" class="container">
+  <div style="position:relative">
+    <mat-progress-spinner value="100" [diameter]="spinnerDiameter" style="position:absolute">
+    </mat-progress-spinner>
+    <mat-progress-spinner value="{{((fayun/orderTotal)*100).toFixed(0)}}" color="accent" [diameter]="spinnerDiameter">
+    </mat-progress-spinner>
+    <span class="number">{{((fayun/orderTotal)*100).toFixed(0)}}%</span>
+  </div>
+  <p>已发运</p>
+  <mat-progress-bar mode="determinate" value="{{((fayun/orderTotal)*100).toFixed(0)}}"></mat-progress-bar>
+</div>
+<div fxFlexOffset="5" fxFlex="45">
+  <div style="position:relative">
+    <mat-progress-spinner value="100" [diameter]="spinnerDiameter" style="position:absolute">
+    </mat-progress-spinner>
+    <mat-progress-spinner value="{{((pool/orderTotal)*100).toFixed(0)}}" color="accent" [diameter]="spinnerDiameter">
+    </mat-progress-spinner>
+    <span class="number">{{((pool/orderTotal)*100).toFixed(0)}}%</span>
+  </div>
+  <p>订单池</p>
+  <mat-progress-bar mode="determinate" value="{{((pool/orderTotal)*100).toFixed(0)}}"></mat-progress-bar>
+</div>

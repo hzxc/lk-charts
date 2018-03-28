@@ -1,0 +1,11 @@
+<!-- <div>
+  <nvd3 [options]="options" [data]="data"></nvd3>
+</div> -->
+<ul>
+  <li *ngFor="let owner of fiveOwnerOrder">
+      <mat-icon fxFlex="20" color="warn">face</mat-icon>
+      <span fxFlex="30">{{owner.name}}</span>
+      <span fxFlex="30">{{owner.total}}</span>
+      <span fxFlex="20">{{(owner.total/orderTotal*100).toFixed(0)+'%'}}</span>
+    </li>
+</ul>

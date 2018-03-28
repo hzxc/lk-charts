@@ -1,0 +1,108 @@
+<!-- <router-outlet></router-outlet> -->
+<div class="container">
+    <div id="header">
+        <span>{{now}}</span>
+        <img src="../assets/logo.png" id="logo">
+    </div>
+    <!-- body -->
+    <div row id="body">
+        <div fxFlex="40" fxLayout="column" fxLayoutAlign="space-between stretch">
+            <div fxFlex="50">
+                <mat-card fxFlex="59" class="border">
+                    <mat-card-title>今日订单总数</mat-card-title>
+                    <mat-card-content>
+                        <span class="blue iconFont" style="position:absolute;right:5%;bottom:30%">{{orderTotal}}</span>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card fxFlexOffset="2" fxFlex="39" class="border">
+                    <mat-card-title>实时发运状态</mat-card-title>
+                    <mat-card-content style="padding:0 20px">
+                        <div>
+                            <span>今日订单量</span>
+                            <span class="blue right">{{orderTotal}}</span>
+                        </div>
+                        <div>
+                            <ul>
+                                <li *ngFor="let state of stateArray">
+                                    <span>{{state.name}}</span>
+                                    <span class="red right">{{state.total}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div fxFlexOffset="1" fxFlex="49">
+                <mat-card fxFlex="59" class="border">
+                    <mat-card-title>状态柱状图</mat-card-title>
+                    <mat-card-content>
+                        <app-bar-cart [multiple]="multiple"></app-bar-cart>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card fxFlexOffset="2" fxFlex="39" class="border">
+                    <mat-card-title>商家入驻量</mat-card-title>
+                    <mat-card-content>
+                     <span class="blue iconFont" style="position:absolute;right:5%;bottom:30%">{{ownerTotal}}</span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div fxFlexOffset="1" fxFlex="48" fxLayout="column" fxLayoutAlign="space-between stretch">
+            <mat-card fxLayout="column" fxFlex="100" class="border">
+                <mat-card-title fxFlex="10">区域曲线图</mat-card-title>
+                <mat-card-content fxFlex="90">
+                    <app-line-chart [multiple]="multiple"></app-line-chart>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div fxFlexOffset="1" fxFlex="20" fxLayout="column" fxLayoutAlign="space-between stretch" >
+            <mat-card fxFlex="49" class="border">
+                <mat-card-title>今日销量排行耪</mat-card-title>
+                <mat-card-content>
+                    <ul>
+                        <li *ngFor="let owner of fiveOwnerOrder">
+                            <mat-icon fxFlex="20" color="accent">face</mat-icon>
+                            <span fxFlex="30">{{owner.name}}</span>
+                            <span fxFlex="30">{{owner.total}}</span>
+                            <span fxFlex="20">{{(owner.total/orderTotal*100).toFixed(0)+'%'}}</span>
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlexOffset="2" fxFlex="49" class="border">
+                <mat-card-title>销量柱状图</mat-card-title>
+                <mat-card-content>
+                    <app-time-list [fiveOwnerOrder]="ownerOrder"></app-time-list>                      
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <!-- foot -->
+    <div row id="foot">
+        <mat-card fxFlex="24" class="border">
+            <mat-card-title>商家完成状态</mat-card-title>
+            <mat-card-content>
+                <app-finish-state [multiple]="multiple"></app-finish-state>
+            </mat-card-content>
+        </mat-card>
+        <mat-card fxFlexOffset="1" fxFlex="24" class="border">
+            <mat-card-title>阶段订单状态</mat-card-title>
+            <mat-card-content>
+                <app-poll [spinnerDiameter]="spinnerDiameter" [orderTotal]="orderTotal" [multiple]="multiple"></app-poll>
+            </mat-card-content>
+        </mat-card>
+        <mat-card fxFlexOffset="1" fxFlex="24" class="border">
+            <mat-card-title>区域销量排行榜</mat-card-title>
+            <mat-card-content>
+                <app-area-list [orderTotal]="orderTotal" [multiple]="multiple"></app-area-list>
+            </mat-card-content>
+        </mat-card>
+        <!-- <mat-card fxFlexOffset="1" fxFlex="19" class="border">44</mat-card> -->
+        <mat-card fxFlexOffset="1" fxFlex="25" class="border">
+            <mat-card-title>阶段订单状态</mat-card-title>
+            <mat-card-content>
+                <app-order-state [spinnerDiameter]="spinnerDiameter" [orderTotal]="orderTotal" [multiple]="multiple"></app-order-state>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

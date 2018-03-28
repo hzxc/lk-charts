@@ -1,0 +1,47 @@
+#header{
+    background: #282737;
+}
+#header span{
+    position: absolute;
+    right:3%;
+    /* margin-top: 2%; */
+    font-size: 3vh;
+    color: #4F8794;
+}
+mat-card{
+    margin-top: 1%;
+    padding: 10px !important;
+}
+mat-card-title{
+    color: #4F8794;
+    font-size: 2vh !important;
+}
+.blue{
+    color: #089AD6;
+}
+.red{
+    color: #D5314A;
+}
+.orange{
+    color: #C1A856;
+}
+.border{
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+ul{
+    list-style: none;
+    padding: 0;
+    line-height:3.6vh;
+}
+.iconFont{
+    font-size:10vh;
+}
+.center{
+    text-align: center;
+}
+.right{
+    position: absolute;
+    right:25px; 
+    
+}
