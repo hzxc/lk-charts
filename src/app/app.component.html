@@ -49,9 +49,9 @@
         </div>
         <div fxFlexOffset="1" fxFlex="48" fxLayout="column" fxLayoutAlign="space-between stretch">
             <mat-card fxLayout="column" fxFlex="100" class="border">
-                <mat-card-title fxFlex="10">区域曲线图</mat-card-title>
+                <mat-card-title fxFlex="10">区域订单分布图</mat-card-title>
                 <mat-card-content fxFlex="90">
-                    <app-line-chart [multiple]="multiple"></app-line-chart>
+                    <app-line-chart fxFlex="100"></app-line-chart>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -94,7 +94,9 @@
         <mat-card fxFlexOffset="1" fxFlex="24" class="border">
             <mat-card-title>区域销量排行榜</mat-card-title>
             <mat-card-content>
-                <app-area-list [orderTotal]="orderTotal" [multiple]="multiple"></app-area-list>
+                   <app-week-line></app-week-line>
+                    <!-- <app-line-chart></app-line-chart> -->
+                <!-- <app-area-list [orderTotal]="orderTotal" [multiple]="multiple"></app-area-list> -->
             </mat-card-content>
         </mat-card>
         <!-- <mat-card fxFlexOffset="1" fxFlex="19" class="border">44</mat-card> -->

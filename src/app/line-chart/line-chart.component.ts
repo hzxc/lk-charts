@@ -3,13 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { OrderServesService } from '../shared/order-serves.service';
 import { Console } from '@angular/core/src/console';
 import { OnDestroy } from '@angular/core';
+import * as $ from 'jquery';
+import * as  echarts from 'echarts';
+import { values } from 'd3';
 
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })
-export class LineChartComponent implements OnInit, OnDestroy {
+export class LineChartComponent implements OnInit {
 
   private provinceArray = [
     '安徽省', '北京市', '重庆市', '福建省', '甘肃省',
@@ -20,81 +23,93 @@ export class LineChartComponent implements OnInit, OnDestroy {
     '山西省', '陕西省', '四川省', '天津市',
     '新疆维吾尔自治区', '西藏自治区'
   ];
-  private data = [];
-  @Input()
-  private multiple;
 
-  private timer;
+  private provinceOrder = [];
+  // private fiveOwnerOrder = [];
+  private option;
 
   constructor(
     private _OrderServesService: OrderServesService
   ) {
 
   }
-  ngOnInit(): void {
-    this.getTotalByProvince();
-    this.timer = setInterval(() => {
-      this.getTotalByProvince();
-    }, 1000 * 60 * 30)
-  }
-  ngOnDestroy(): void {
-    clearInterval(this.timer);
-  }
 
-  getTotalByProvince() {
-    let _lineChartData: Array<any> = new Array();
-    _lineChartData[0] = {
-      data: new Array(),
-      label: '单量'
-    };
-    this.lineChartLabels = [];
+  ngOnInit(): void {
+    this.getOrderByProvince();
+
+
+  };
+  formatTime(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    return year + '-' + month + '-' + (day-1)+" 18:00:00";
+  } 
+  getOrderByProvince() {
+    this.provinceOrder=[];
+    var myChart = echarts.init(document.getElementById('main'));
+    var yestoday=this.formatTime(new Date());
     for (let i = 0; i < this.provinceArray.length; i++) {
       this._OrderServesService
-        .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", "", "")
+        .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", "yestoday", "")
         .subscribe((res) => {
-          var length = 0;
+          var number = 0;
           for (let j in res) {
-            length++;
+            number++;
           }
-          if (length > 0) {
-            // this.data[i] = length;
-            this.lineChartLabels.push(this.provinceArray[i]);
-            _lineChartData[0].data.push(length * this.multiple);
-            this.lineChartData = _lineChartData.concat();
-          }
+          this.option = {
+            tooltip: {
+              trigger: 'item',
+              formatter: '{b}：{c}'
+            },
+            series: [
+              {
+                name: '中国',
+                type: 'map',
+                mapType: 'china',
+                selectedMode: 'multiple',
+                label: {
+                  normal: {
+                    show: true
+                  },
+                  emphasis: {
+                    show: true
+                  }
+                },
+                data: [],
+                zoom:1
+              }
+            ],
+            visualMap: {
+              min: 0,
+              max: 1000,
+              text: ['高', '低'],
+              realtime: false,
+              calculable: true,
+              inRange: {
+                color: ['#089AD6', 'yellow', 'orangered']
+              },
+              textStyle: {
+                color: '#fff'
+              }
+            },
+            geo:{
+              top:0,
+              bottom:0,
+              left:0,
+              right:0
+            }
+
+          };
+          if ((this.provinceArray[i]).substr(0, 2) == '内蒙') {
+            this.provinceOrder.push({ name: (this.provinceArray[i]).substr(0, 3), value: number });
+          } else if ((this.provinceArray[i]).substr(0, 2) == '黑龙') {
+            this.provinceOrder.push({ name: (this.provinceArray[i]).substr(0, 3), value: number });
+          } else
+            this.provinceOrder.push({ name: (this.provinceArray[i]).substr(0, 2), value: number });
+          this.option.series[0].data = this.provinceOrder;
+          myChart.setOption(this.option);
         })
     }
-  }
-
-  // lineChart
-  public lineChartData: Array<any> = [
-    { data: [], label: 'Series A' },
-  ];
-  public lineChartLabels: Array<any> = [];
-  public lineChartOptions: any = {
-    responsive: true
-  };
-  public lineChartColors: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(18,149,219,0.2)',
-      borderColor: 'rgba(18,149,219,1)',
-      pointBackgroundColor: 'rgba(18,149,219,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(18,149,219,0.8)'
-    }
-  ];
-  public lineChartLegend: boolean = true;
-  public lineChartType: string = 'line';
-
-  public randomize(): void {
-    let _lineChartData: Array<any> = new Array(this.lineChartData.length);
-    for (let i = 0; i < this.lineChartData.length; i++) {
-      _lineChartData[i] = { data: new Array(this.lineChartData[i].data.length), label: this.lineChartData[i].label };
-      for (let j = 0; j < this.lineChartData[i].data.length; j++) {
-        _lineChartData[i].data[j] = Math.floor((Math.random() * 100) + 1);
-      }
-    }
-    this.lineChartData = _lineChartData;
   }
 }

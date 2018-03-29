@@ -44,6 +44,7 @@ export class TimeListComponent implements OnInit {
     this.data = [];
     for (let i = 0; i < 5; i++) {
       this.data.push(this.fiveOwnerOrder[i]['total']);
+      this.barChartLabels[i]=this.fiveOwnerOrder[i]['name']
     }
     let clone = JSON.parse(JSON.stringify(this.barChartData));
     clone[0].data = this.data;
@@ -54,7 +55,7 @@ export class TimeListComponent implements OnInit {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  public barChartLabels: string[] = ['第一名', '第二名', '第三名', '第四名', '第五名'];
+  public barChartLabels: string[] = ['', '', '', '', ''];
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
 
@@ -63,13 +64,13 @@ export class TimeListComponent implements OnInit {
   ];
 
   public barChartColors: Array<any> = [
-    { // yellow
-      backgroundColor: 'rgba(217,48,79,0.8)',
-      borderColor: 'rgba(217,48,79,1)',
-      pointBackgroundColor: 'rgba(217,48,79,1)',
+    { // orange
+      backgroundColor: 'rgba(255,165,0,0.8)',
+      borderColor: 'rgba(255,165,0,1)',
+      pointBackgroundColor: 'rgba(255,165,0,1)',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(217,48,79,0.8)'
+      pointHoverBorderColor: 'rgba(255,165,0,0.8)'
     },
   ];
 }

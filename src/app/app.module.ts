@@ -50,7 +50,11 @@ import { orderStateComponent } from './order-state/order-state.component';
 import { BarCartComponent } from './bar-cart/bar-cart.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { TimeListComponent } from './time-list/time-list.component';
+import { EchartsModule } from 'echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
 
+import * as $ from 'jquery';
+import { WeekLineComponent } from './week-line/week-line.component';
 
 
 @NgModule({
@@ -63,6 +67,7 @@ import { TimeListComponent } from './time-list/time-list.component';
     FinishStateComponent,
     PollComponent,
     TimeListComponent,
+    WeekLineComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,7 +106,9 @@ import { TimeListComponent } from './time-list/time-list.component';
     MatRadioModule,
     MatSliderModule,
     MatProgressBarModule,
-    ChartsModule
+    ChartsModule,
+    // EchartsModule,
+    NgxEchartsModule
   ],
  exports:[
   MatProgressBarModule

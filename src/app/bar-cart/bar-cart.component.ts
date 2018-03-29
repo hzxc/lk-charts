@@ -111,12 +111,12 @@ export class BarCartComponent implements OnInit, OnDestroy {
 
   public barChartColors: Array<any> = [
     { // yellow
-      backgroundColor: 'rgba(255,215,64,0.8)',
-      borderColor: 'rgba(255,215,64,1)',
-      pointBackgroundColor: 'rgba(255,215,64,1)',
+      backgroundColor: 'rgba(255,255,0,0.8)',
+      borderColor: 'rgba(255,255,0,1)',
+      pointBackgroundColor: 'rgba(255,255,0,1)',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(255,215,64,0.8)'
+      pointHoverBorderColor: 'rgba(255,255,0,0.8)'
     },
   ];
 }

@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log(this.clientHeight);
     this.getHeight();
     this.getOrderTotal();
     this.getTotalOwner();
@@ -73,13 +74,14 @@ export class AppComponent implements OnInit, OnDestroy {
     let logo = document.getElementById('logo');
     logo.style.height = this.clientHeight * .09 + 'px';
     header.style.height = this.clientHeight * .1 + 'px';
-    body.style.height = this.clientHeight * .59 + 'px';
-    foot.style.height = this.clientHeight * .29 + 'px';
+    body.style.height = this.clientHeight * .74 + 'px';
+    foot.style.height = this.clientHeight * .39 + 'px';
     this.spinnerDiameter = parseInt(this.clientHeight / 12 + '');
   }
-  getOrderTotal() {
+  getOrderTotal() { 
+    var yestoday=this.formatTime(new Date()) ;  
     this._OrderServesService
-      .getOrders('', 0, 0, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 0, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((res) => {
         var length = 0;
         for (let i in res) {
@@ -88,6 +90,13 @@ export class AppComponent implements OnInit, OnDestroy {
         this.orderTotal = length * this.multiple;
       })
   }
+  formatTime(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    return year + '-' + month + '-' + (day-1)+" 18:00:00";
+  } 
+
   getTotalOwner() {
     this._OrderServesService
       .getOwners()
@@ -100,10 +109,12 @@ export class AppComponent implements OnInit, OnDestroy {
       })
   }
   getState() {
+    var yestoday=this.formatTime(new Date()) ; 
+
     this.stateArray=[];
     // 已发运
     this._OrderServesService
-      .getOrders('', 0, 900, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 900, "", "", " ", "", "", "", "", "yestoday", "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
@@ -113,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
       })
     // 待复核
     this._OrderServesService
-      .getOrders('', 0, 700, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 700, "", "", " ", "", "", "", "", "yestoday", "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
@@ -123,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy {
       })
     // 待拣货
     this._OrderServesService
-      .getOrders('', 0, 300, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 300, "", "", " ", "", "", "", "", "yestoday", "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
@@ -134,7 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // 订单池
     this._OrderServesService
-      .getOrders('', 0, 100, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 100, "", "", " ", "", "", "", "", "yestoday", "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
@@ -144,6 +155,8 @@ export class AppComponent implements OnInit, OnDestroy {
       })
   }
   getOrderByOwner() {
+    var yestoday=this.formatTime(new Date()) ; 
+
     this.ownerOrder=[];
     this.fiveOwnerOrder=[]
     this._OrderServesService
@@ -152,7 +165,7 @@ export class AppComponent implements OnInit, OnDestroy {
         for (let i in result) {
           for (let j in result[i]) {
             this._OrderServesService
-              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", "", "")
+              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", "yestoday", "")
               .subscribe((res) => {
                 let length = 0;
                 for (let k in res)
