@@ -55,6 +55,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 
 import * as $ from 'jquery';
 import { WeekLineComponent } from './week-line/week-line.component';
+import { DiacreteBarComponent } from './diacrete-bar/diacrete-bar.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { WeekLineComponent } from './week-line/week-line.component';
     PollComponent,
     TimeListComponent,
     WeekLineComponent,
+    DiacreteBarComponent,
   ],
   imports: [
     BrowserModule,

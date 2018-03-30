@@ -13,9 +13,9 @@ export class WeekLineComponent implements OnInit {
 
   }
   public lineChartData: Array<any> = [
-    { data: [45, 25, 65], label: 'Series A' },
+    { data: [45,35, 65,35,41], label: '销量' },
   ];
-  public lineChartLabels: Array<any> = ['1', '2', '3'];
+  public lineChartLabels: Array<any> = ['周一', '周二', '周三','周四','周五'];
   public lineChartOptions: any = {
     responsive: true
   };

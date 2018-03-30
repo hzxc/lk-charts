@@ -22,77 +22,85 @@ export class BarCartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getState();
-    this.timer=setInterval(()=>{
+    this.timer = setInterval(() => {
       this.getState();
-    },1000*60*30)
+    }, 1000 * 60 * 30)
   }
   ngOnDestroy(): void {
     clearInterval(this.timer)
   }
   getState() {
+    var yesterday = this._OrderServesService.formatTime(new Date());
     // 已发运
     this._OrderServesService
-      .getOrders('', 0, 900, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 900, "", "", " ", "", "", "", "", yesterday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.data[0] = length*this.multiple;
+        this.data[5] = length * this.multiple;
+      })
+    // 待发运
+    this._OrderServesService
+      .getOrders('', 0, 850, "", "", " ", "", "", "", "", yesterday, "")
+      .subscribe((result) => {
+        var length = 0;
+        for (let j in result) {
+          length++;
+        }
+        this.data[4] = length * this.multiple;
       })
     // 已复核'
     this._OrderServesService
-      .getOrders('', 0, 800, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 800, "", "", " ", "", "", "", "", yesterday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.data[1] = length*this.multiple;
+        this.data[3] = length * this.multiple;
       })
     // 待复核
     this._OrderServesService
-      .getOrders('', 0, 700, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 700, "", "", " ", "", "", "", "", yesterday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.data[2] = length*this.multiple;
-      })
-    // 拣货中
-    this._OrderServesService
-      .getOrders('', 0, 450, "", "", " ", "", "", "", "", "", "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.data[3] = length*this.multiple;
+        this._OrderServesService
+          .getOrders('', 0, 750, "", "", " ", "", "", "", "", yesterday, "")
+          .subscribe((r) => {
+            var s = 0;
+            for (let j in result) {
+              s++;
+            }
+            this.data[2] = (length + s) * this.multiple;
+          })
       })
     // 待拣货
     this._OrderServesService
-      .getOrders('', 0, 300, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 300, "", "", " ", "", "", "", "", yesterday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.data[4] = length*this.multiple;
-        // 订单池
-        this._OrderServesService
-          .getOrders('', 0, 100, "", "", " ", "", "", "", "", "", "")
-          .subscribe((result) => {
-            var length = 0;
-            for (let j in result) {
-              length++;
-            }
-            this.data[5] = length*this.multiple;
-            let clone = JSON.parse(JSON.stringify(this.barChartData));
-            clone[0].data = this.data;
-            this.barChartData = clone;
-          })
-
+        this.data[1] = length * this.multiple;
+      })
+    // 订单池
+    this._OrderServesService
+      .getOrders('', 0, 100, "", "", " ", "", "", "", "", yesterday, "")
+      .subscribe((result) => {
+        var length = 0;
+        for (let j in result) {
+          length++;
+        }
+        this.data[0] = length * this.multiple;
+        let clone = JSON.parse(JSON.stringify(this.barChartData));
+        clone[0].data = this.data;
+        this.barChartData = clone;
       })
 
   }
@@ -101,12 +109,12 @@ export class BarCartComponent implements OnInit, OnDestroy {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  public barChartLabels: string[] = ['已发运', '已复核', '待复核', '拣货中', '待拣货', '订单池'];
+  public barChartLabels: string[] = ['订单池', '待拣货', '待复核', '已复核', '待发运', '已发运'];
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
 
   public barChartData: any[] = [
-    { data: [25], label: '状态' },
+    { data: [], label: '状态' },
   ];
 
   public barChartColors: Array<any> = [

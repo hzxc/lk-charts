@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FloatingActionButton } from 'ng2-floating-action-menu';
-import { OnInit, OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnInit, OnDestroy } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { OrderServesService } from './shared/order-serves.service';
@@ -36,19 +36,18 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.clientHeight);
     this.getHeight();
     this.getOrderTotal();
     this.getTotalOwner();
     this.getState();
     this.getOrderByOwner();
-
     this.timer = setInterval(() => {
       this.getNow();
     }, 1000);
-
-    this.timer1 = setInterval(() => {
+    setInterval(() => {
       this.getOrderTotal();
+    }, 3000);
+    this.timer1 = setInterval(() => {
       this.getTotalOwner();
       this.getState();
       this.getOrderByOwner();
@@ -78,8 +77,8 @@ export class AppComponent implements OnInit, OnDestroy {
     foot.style.height = this.clientHeight * .39 + 'px';
     this.spinnerDiameter = parseInt(this.clientHeight / 12 + '');
   }
-  getOrderTotal() { 
-    var yestoday=this.formatTime(new Date()) ;  
+  getOrderTotal() {
+    var yestoday = this._OrderServesService.formatTime(new Date());
     this._OrderServesService
       .getOrders('', 0, 0, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((res) => {
@@ -90,13 +89,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.orderTotal = length * this.multiple;
       })
   }
-  formatTime(date) {
-    var year = date.getFullYear();
-    var month = date.getMonth()+1;
-    var day = date.getDate();
-    return year + '-' + month + '-' + (day-1)+" 18:00:00";
-  } 
-
   getTotalOwner() {
     this._OrderServesService
       .getOwners()
@@ -109,63 +101,70 @@ export class AppComponent implements OnInit, OnDestroy {
       })
   }
   getState() {
-    var yestoday=this.formatTime(new Date()) ; 
+    var yestoday = this._OrderServesService.formatTime(new Date());
 
-    this.stateArray=[];
+    this.stateArray = [];
     // 已发运
     this._OrderServesService
-      .getOrders('', 0, 900, "", "", " ", "", "", "", "", "yestoday", "")
+      .getOrders('', 0, 900, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.stateArray.push({ 'name': '已发运', total: length * this.multiple });
+        this.stateArray.push({ name: '已发运', total: length * this.multiple });
       })
     // 待复核
     this._OrderServesService
-      .getOrders('', 0, 700, "", "", " ", "", "", "", "", "yestoday", "")
+      .getOrders('', 0, 700, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.stateArray.push({ 'name': '待复核', total: length * this.multiple });
+        this._OrderServesService
+          .getOrders('', 0, 750, "", "", " ", "", "", "", "", yestoday, "")
+          .subscribe((r) => {
+            var s = 0;
+            for (let j in result) {
+              s++;
+            }
+            this.stateArray.push({ name: '待复核', total: (length + s) * this.multiple });
+          })
       })
     // 待拣货
     this._OrderServesService
-      .getOrders('', 0, 300, "", "", " ", "", "", "", "", "yestoday", "")
+      .getOrders('', 0, 300, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.stateArray.push({ 'name': '待拣货', total: length * this.multiple });
+        this.stateArray.push({ name: '待拣货', total: length * this.multiple });
       })
 
     // 订单池
     this._OrderServesService
-      .getOrders('', 0, 100, "", "", " ", "", "", "", "", "yestoday", "")
+      .getOrders('', 0, 100, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
           length++;
         }
-        this.stateArray.push({ 'name': '订单池', total: length * this.multiple });
+        this.stateArray.push({ name: '订单池', total: length * this.multiple });
       })
   }
   getOrderByOwner() {
-    var yestoday=this.formatTime(new Date()) ; 
-
-    this.ownerOrder=[];
-    this.fiveOwnerOrder=[]
+    var yestoday = this._OrderServesService.formatTime(new Date());
+    this.ownerOrder = [];
+    this.fiveOwnerOrder = []
     this._OrderServesService
       .getOwners()
       .subscribe((result) => {
         for (let i in result) {
           for (let j in result[i]) {
             this._OrderServesService
-              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", "yestoday", "")
+              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "")
               .subscribe((res) => {
                 let length = 0;
                 for (let k in res)

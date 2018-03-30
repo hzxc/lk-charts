@@ -30,9 +30,10 @@ export class TimeListComponent implements OnInit {
         clearInterval(timer1);
       }
     }, 1000)
+
     this.timer = setInterval(() => {
       this.get();
-    }, 1000 * 60 * 60)
+    }, 1000 * 60 * 60)    
   }
 
 
@@ -42,7 +43,7 @@ export class TimeListComponent implements OnInit {
 
   get() {
     this.data = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       this.data.push(this.fiveOwnerOrder[i]['total']);
       this.barChartLabels[i]=this.fiveOwnerOrder[i]['name']
     }
@@ -55,7 +56,7 @@ export class TimeListComponent implements OnInit {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  public barChartLabels: string[] = ['', '', '', '', ''];
+  public barChartLabels: string[] = ['', '', '', '', '','','',''];
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
 

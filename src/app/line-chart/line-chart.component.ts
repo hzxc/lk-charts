@@ -12,8 +12,7 @@ import { values } from 'd3';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })
-export class LineChartComponent implements OnInit {
-
+export class LineChartComponent implements OnInit,OnDestroy { 
   private provinceArray = [
     '安徽省', '北京市', '重庆市', '福建省', '甘肃省',
     '广东省', '广西省', '贵州省', '海南省', '河北省',
@@ -30,25 +29,19 @@ export class LineChartComponent implements OnInit {
 
   constructor(
     private _OrderServesService: OrderServesService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.getOrderByProvince();
-
-
   };
-  formatTime(date) {
-    var year = date.getFullYear();
-    var month = date.getMonth()+1;
-    var day = date.getDate();
-    return year + '-' + month + '-' + (day-1)+" 18:00:00";
-  } 
+  ngOnDestroy(): void {
+    
+  }
+ 
   getOrderByProvince() {
     this.provinceOrder=[];
     var myChart = echarts.init(document.getElementById('main'));
-    var yestoday=this.formatTime(new Date());
+    var yestoday=this._OrderServesService.formatTime(new Date());
     for (let i = 0; i < this.provinceArray.length; i++) {
       this._OrderServesService
         .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", "yestoday", "")

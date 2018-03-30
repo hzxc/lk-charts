@@ -38,9 +38,10 @@ export class orderStateComponent implements OnInit, OnDestroy {
   }
 
   getState() {
+    var yestoday=this._OrderServesService.formatTime(new Date());
     // 待复核
     this._OrderServesService
-      .getOrders('', 0, 700, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 700, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
@@ -50,7 +51,7 @@ export class orderStateComponent implements OnInit, OnDestroy {
       })
     // 待拣货
     this._OrderServesService
-      .getOrders('', 0, 300, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 300, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {

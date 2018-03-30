@@ -34,9 +34,10 @@ export class PollComponent implements OnInit, OnDestroy {
     clearInterval(this.timer);
   }
   getState() {
+    var yestoday=this._OrderServesService.formatTime(new Date());
     // 已发运
     this._OrderServesService
-      .getOrders('', 0, 900, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 900, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {
@@ -46,7 +47,7 @@ export class PollComponent implements OnInit, OnDestroy {
       })
     // 订单池
     this._OrderServesService
-      .getOrders('', 0, 100, "", "", " ", "", "", "", "", "", "")
+      .getOrders('', 0, 100, "", "", " ", "", "", "", "", yestoday, "")
       .subscribe((result) => {
         var length = 0;
         for (let j in result) {

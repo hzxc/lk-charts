@@ -32,22 +32,27 @@ export class OrderServesService {
     CreateDateTime: string,
     CreateUser: string,
   ): Observable<Response> {
-    let url_ = this.orderUrl + "/DeliveryOrder/GetDeliveryOrders?";
-    url_ += "company=" + encodeURIComponent("" + Company) + "&";
-    url_ += "leadingSts=" + encodeURIComponent(""+LeadingSts) + "&";
-    url_ += "trailingSts=" + encodeURIComponent(""+TrailingSts) + "&";
-    url_ += "shipmentType=" + encodeURIComponent(ShipmentType) + "&";
-    url_ += "shipToState=" + encodeURIComponent("" + ShipToState) + "&";
-    url_ += "actualShipDateTime=" + encodeURIComponent("" + ActualShipDateTime) + "&";
-    url_ += "carrier=" + encodeURIComponent("" + Carrier) + "&";
-    url_ += "userDef8=" + encodeURIComponent("" + UserDef8) + "&";
-    url_ += "processType=" + encodeURIComponent("" + ProcessType) + "&";
-    url_ += "shipmentCategory6=" + encodeURIComponent("" + ShipmentCategory6) + "&";
-    url_ += "createDateTime=" + encodeURIComponent("" + CreateDateTime) + "&";
-    url_ += "createUser=" + encodeURIComponent("" + CreateUser) + "&";
-    url_ = url_.replace(/[?&]$/, "");
-    return this.http.get(url_, this.options_)
-      .map((response: any) => { return response; })
+    try{
+      let url_ = this.orderUrl + "/DeliveryOrder/GetDeliveryOrders?";
+      url_ += "company=" + encodeURIComponent("" + Company) + "&";
+      url_ += "leadingSts=" + encodeURIComponent(""+LeadingSts) + "&";
+      url_ += "trailingSts=" + encodeURIComponent(""+TrailingSts) + "&";
+      url_ += "shipmentType=" + encodeURIComponent(ShipmentType) + "&";
+      url_ += "shipToState=" + encodeURIComponent("" + ShipToState) + "&";
+      url_ += "actualShipDateTime=" + encodeURIComponent("" + ActualShipDateTime) + "&";
+      url_ += "carrier=" + encodeURIComponent("" + Carrier) + "&";
+      url_ += "userDef8=" + encodeURIComponent("" + UserDef8) + "&";
+      url_ += "processType=" + encodeURIComponent("" + ProcessType) + "&";
+      url_ += "shipmentCategory6=" + encodeURIComponent("" + ShipmentCategory6) + "&";
+      url_ += "createDateTime=" + encodeURIComponent("" + CreateDateTime) + "&";
+      url_ += "createUser=" + encodeURIComponent("" + CreateUser) + "&";
+      url_ = url_.replace(/[?&]$/, "");
+      return this.http.get(url_, this.options_)
+        .map((response: any) => { return response; })
+    }catch(e){
+      return <any>Observable.throw(e);
+    }
+   
   }
 
   getOwners(): Observable<Response> {
@@ -56,4 +61,10 @@ export class OrderServesService {
     return this.http.request("get", url_, this.options_)
       .map((response: any) => { return response; })
   }
+  formatTime(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    return year + '-' + month + '-' + (day-1)+" 18:00:00";
+  } 
 }

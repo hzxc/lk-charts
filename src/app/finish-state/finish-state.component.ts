@@ -7,7 +7,7 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
   templateUrl: './finish-state.component.html',
   styleUrls: ['./finish-state.component.css']
 })
-export class FinishStateComponent implements OnInit,OnDestroy{
+export class FinishStateComponent implements OnInit, OnDestroy {
 
 
   private sendOrder = [];
@@ -22,37 +22,38 @@ export class FinishStateComponent implements OnInit,OnDestroy{
   ) { }
 
   ngOnInit() {
-    this. getOrderByOwner();
-    this.timer=setInterval(()=>{
-      this. getOrderByOwner();
-    },1000*60*30)
+    this.getOrderByOwner();
+    this.timer = setInterval(() => {
+      this.getOrderByOwner();
+    }, 1000 * 60 * 30)
   }
   ngOnDestroy(): void {
     clearInterval(this.timer);
   }
 
   getOrderByOwner() {
-    this.sendOrder=[];
-    this.fiveSendOrder=[];
+    var yestoday = this._OrderServesService.formatTime(new Date());
+    this.sendOrder = [];
+    this.fiveSendOrder = [];
     this._OrderServesService
       .getOwners()
       .subscribe((result) => {
         for (let i in result) {
           for (let j in result[i]) {
             this._OrderServesService
-              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", "", "")
-              .subscribe((res) => {
+              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "")
+              .subscribe((res) => { 
                 let length = 0;
                 for (let k in res)
                   length++;
                 if (length > 0) {
                   this._OrderServesService
-                    .getOrders(result[i][j], 0, 900, "", '', " ", "", "", "", "", "", "")
+                    .getOrders(result[i][j], 0, 900, "", '', " ", "", "", "", "",yestoday, "")
                     .subscribe((r) => {
                       let t = 0;
                       for (let k in r)
                         t++;
-                      this.sendOrder.push({ 'name': result[i][j], 'total': length*this.multiple, 'send': t*this.multiple });
+                      this.sendOrder.push({ 'name': result[i][j], 'total': length * this.multiple, 'send': t * this.multiple });
                       this.sendOrder.sort(this.sortTotal);
                       this.fiveSendOrder = this.sendOrder.concat();
                       this.fiveSendOrder.splice(6);
