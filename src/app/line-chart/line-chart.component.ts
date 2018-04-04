@@ -14,13 +14,13 @@ import { values } from 'd3';
 })
 export class LineChartComponent implements OnInit,OnDestroy { 
   private provinceArray = [
-    '安徽省', '北京市', '重庆市', '福建省', '甘肃省',
-    '广东省', '广西省', '贵州省', '海南省', '河北省',
-    '黑龙江省', '河南省', '湖北省', '湖南省', '云南省',
-    '浙江省', '江苏省', '江西省', '吉林省', '辽宁省',
-    '内蒙古', '宁夏', '青海', '山东省', '上海市',
-    '山西省', '陕西省', '四川省', '天津市',
-    '新疆维吾尔自治区', '西藏自治区'
+    '安徽', '北京', '重庆', '福建', '甘肃',
+    '广东', '广西', '贵州', '海南', '河北',
+    '黑龙江', '河南', '湖北', '湖南', '云南',
+    '浙江', '江苏', '江西', '吉林', '辽宁',
+    '内蒙古', '宁夏', '青海', '山东', '上海',
+    '山西', '陕西', '四川', '天津',
+    '新疆', '西藏'
   ];
 
   private provinceOrder = [];
@@ -44,7 +44,7 @@ export class LineChartComponent implements OnInit,OnDestroy {
     var yestoday=this._OrderServesService.formatTime(new Date());
     for (let i = 0; i < this.provinceArray.length; i++) {
       this._OrderServesService
-        .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", "yestoday", "")
+        .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", yestoday, "","")
         .subscribe((res) => {
           var number = 0;
           for (let j in res) {
@@ -80,7 +80,7 @@ export class LineChartComponent implements OnInit,OnDestroy {
               realtime: false,
               calculable: true,
               inRange: {
-                color: ['#089AD6', 'yellow', 'orangered']
+                color: ['#F2D8D9','red']
               },
               textStyle: {
                 color: '#fff'

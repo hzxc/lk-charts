@@ -12,48 +12,49 @@ export class PollComponent implements OnInit, OnDestroy {
   @Input()
   private spinnerDiameter: number;
   @Input()
-  private orderTotal: number;
+  private orders;
   @Input()
   private multiple;
 
   private fayun: number;
   private pool: number;
-  private timer;
+  private orderTotal: number;
 
   constructor(
     private _OrderServesService: OrderServesService
   ) { }
 
   ngOnInit() {
-    this.getState();
-    this.timer=setInterval(()=>{
-      this.getState();
-    },1000*60*30)
+    var timer;
+    timer = setInterval(() => {
+      if (this.orders != undefined) {
+        this.getState();
+        clearInterval(timer);
+      }
+    }, 1000)
   }
   ngOnDestroy(): void {
-    clearInterval(this.timer);
+
   }
   getState() {
-    var yestoday=this._OrderServesService.formatTime(new Date());
+    let send = 0, number = 0, lengt = 0;
+    for (let i in this.orders) {
+      length++
+    }
     // 已发运
-    this._OrderServesService
-      .getOrders('', 0, 900, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.fayun = length * this.multiple;
-      })
-    // 订单池
-    this._OrderServesService
-      .getOrders('', 0, 100, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.pool = length * this.multiple;
-      })
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '900') {
+        send++;
+      }
+    }
+    //订单池
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '100') {
+        number++;
+      }
+    }   
+    this.fayun = send * this.multiple;
+    this.pool = number * this.multiple;
+    this.orderTotal = length * this.multiple;
   }
 }

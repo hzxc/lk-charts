@@ -3,7 +3,7 @@
     <li *ngFor="let Order of fiveSendOrder">
       <span fxFlex="25">{{Order.name}}</span>
       <span fxFlex="25">{{Order.total}}</span>
-      <mat-progress-bar fxFlex="35" [color]="accent" mode="determinate" value="{{(Order.send/Order.total).toFixed(2)*100}}" color="primary"></mat-progress-bar>
+      <mat-progress-bar fxFlex="35" [color]="warn" mode="determinate" value="{{(Order.send/Order.total).toFixed(2)*100}}" color="primary"></mat-progress-bar>
       <span fxFlexOffset="5"  fxFlex="10">{{((Order.send/Order.total)*100).toFixed(0)+'%'}}</span>
     </li>   
   </ul>

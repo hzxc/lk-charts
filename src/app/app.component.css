@@ -1,23 +1,23 @@
 #header{
-    background: #282737;
+    background: #464298;
 }
 #header span{
     position: absolute;
     right:3%;
     /* margin-top: 2%; */
     font-size: 3vh;
-    color: #4F8794;
+    color: #2FC1E1;
 }
 mat-card{
     margin-top: 1%;
     padding: 10px !important;
 }
 mat-card-title{
-    color: #4F8794;
+    color: #2FC1E1;
     font-size: 2vh !important;
 }
 .blue{
-    color: #089AD6;
+    color: #2FC1E1;
 }
 .red{
     color: orange;
@@ -42,6 +42,5 @@ ul{
 }
 .right{
     position: absolute;
-    right:25px; 
-    
+    right:25px;     
 }

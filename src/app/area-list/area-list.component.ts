@@ -50,9 +50,10 @@ export class areaListComponent implements OnInit, OnDestroy {
     getOrderByProvince() {
         this.ownerOrder = [];
         this.fiveOwnerOrder = [];
+        var yestoday=this._OrderServesService.formatTime(new Date());
         for (let i = 0; i < this.provinceArray.length; i++) {
             this._OrderServesService
-                .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", "", "")
+                .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", yestoday, "","")
                 .subscribe((res) => {
                     var length = 0;
                     for (let j in res) {

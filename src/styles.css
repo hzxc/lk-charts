@@ -2,12 +2,13 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body{
-    background: #21202E;
+    background: #464399;
     font-size: 20px;
 }
 mat-card{
-    background:#21202E !important;
-    color: #999!important;
+    background:#464298 !important;
+    color: #aaa!important;
     line-height: 2vw;
     overflow: hidden;
+    border:2px solid #514D97 !important;
 }

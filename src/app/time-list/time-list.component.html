@@ -1,12 +1,6 @@
-<div style="display: block">
-    <canvas 
-    baseChart 
-    height="150%"
-    [datasets]="barChartData" 
-    [labels]="barChartLabels" 
-    [options]="barChartOptions" 
-    [legend]="barChartLegend"
-    [colors]="barChartColors"
-    [chartType]="barChartType" >
+<!-- <div style="display: block">
+  <canvas baseChart height="150%" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+    [colors]="barChartColors" [chartType]="barChartType">
   </canvas>
-  </div>
+</div> -->
+<div id="bar" echarts [options]="option"></div>

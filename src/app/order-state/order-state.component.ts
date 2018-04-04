@@ -15,49 +15,51 @@ export class orderStateComponent implements OnInit, OnDestroy {
   @Input()
   private spinnerDiameter: number;
   @Input()
-  private orderTotal: number;
+  private orders;
   @Input()
   private multiple;
 
   private fuhe: number;
   private jianhuo: number;
-  private timer;
+  private orderTotal:number;
+
 
   constructor(
     private _OrderServesService: OrderServesService
   ) { }
 
   ngOnInit() {
-    this.getState();
-    this.timer = setInterval(() => {
-      this.getState();
-    }, 1000 * 60 * 30)
+    var timer;
+    timer = setInterval(() => {
+      if (this.orders != undefined) {
+        this.getState();
+        clearInterval(timer);
+      }
+    }, 1000)
   }
   ngOnDestroy(): void {
-    clearInterval(this.timer);
+    
   }
 
   getState() {
-    var yestoday=this._OrderServesService.formatTime(new Date());
-    // 待复核
-    this._OrderServesService
-      .getOrders('', 0, 700, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.fuhe = length * this.multiple;
-      })
-    // 待拣货
-    this._OrderServesService
-      .getOrders('', 0, 300, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.jianhuo = length * this.multiple;
-      })
+    let send = 0, number = 0, lengt = 0;
+    for (let i in this.orders) {
+      length++
+    }
+    // 已发运
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '700') {
+        send++;
+      }
+    }
+    //订单池
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '300') {
+        number++;
+      }
+    }
+    this.fuhe = send * this.multiple;
+    this.jianhuo = number * this.multiple;
+    this.orderTotal = length * this.multiple;
   }
 }

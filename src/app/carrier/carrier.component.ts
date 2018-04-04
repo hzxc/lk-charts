@@ -1,101 +1,84 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { OrderServesService } from '../shared/order-serves.service';
 import * as  echarts from 'echarts';
+import { OrderServesService } from '../shared/order-serves.service';
 
 @Component({
-  selector: 'app-week-line',
-  templateUrl: './week-line.component.html',
-  styleUrls: ['./week-line.component.css']
+  selector: 'app-carrier',
+  templateUrl: './carrier.component.html',
+  styleUrls: ['./carrier.component.css']
 })
-export class WeekLineComponent implements OnInit {
+export class CarrierComponent implements OnInit {
 
   @Input()
-  private multiple;
+  private orders;
+
   private option;
 
   constructor(
-    private _OrderServesService: OrderServesService
+    private _: OrderServesService
   ) { }
-
   ngOnInit() {
-    this.getOrder();
+    var timer;
+    timer = setInterval(() => {
+      if (this.orders != undefined) {
+        this.getCarrier();
+        clearInterval(timer);
+      }
+    }, 1000)
   }
 
-  getOrder() {
-    var xLabel = [];
-    var data = [];
-    var dateArray = [];
-    var newDateArray = [];
-    var myChart = echarts.init(document.getElementById('line'));
-    var today = new Date();
-    var ymd = new Date(today.setDate(today.getDate() - 11));
-    for (let i = 0; i < 10; i++) {
-      ymd = new Date(ymd.setDate(ymd.getDate() + 1));
-      var str = ymd.getFullYear() + "-" + (ymd.getMonth() + 1) + "-" + ymd.getDate();
-      var str1 = ymd.getFullYear() + "-" + (ymd.getMonth() + 1) + "-" + (ymd.getDate() - 1);
-      dateArray.push(str);
-      newDateArray.push(str1)
+  //YUNDA ZTO ZT SF POSTB
+  getCarrier() {
+    var carrierArray = [];
+    var newcarrierArray = [];
+    for (let i in this.orders) {
+      carrierArray.push(this.orders[i]['carrier']);
     }
-    for (let j = 0; j < dateArray.length; j++) {
-      this._OrderServesService
-        .getOrders('', 0, 0, "", "", " ", "", "", "", "", newDateArray[j] + "  16:00:00", "", dateArray[j] + "  16:00:00")
-        .subscribe((res) => {
-          var length = 0;
-          for (let j in res) {
-            length++;
-          }
-          xLabel[j] = (dateArray[j].substr(7) + '日');
-          data[j] = (length);
-          this.chartInit();
-          this.option.xAxis[0].data = xLabel;
-          this.option.series[0].data = data;
-          // this.option.series[1].data = dateArray;
-          // myChart.setOption(this.option);
-        })
-    }
-    this.getProduct();
-  }
-
-  getProduct() {
-    var myChart = echarts.init(document.getElementById('line'));
-    let dayArray = [];
-    let dateArray = [];
-    var now = new Date();
-    now.setDate(now.getDate() - 12);
-    var yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    var day = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " 00:00:00";
-    var endDay = yesterday.getFullYear() + '-' + (yesterday.getMonth() + 1) + '-' + (yesterday.getDate()) + " 23:59:59"
-
-    var ymd = new Date(new Date().setDate(new Date().getDate() - 11));
-    for (let i = 0; i < 10; i++) {
-      ymd = new Date(ymd.setDate(ymd.getDate() + 1));
-      var str = ymd.getFullYear() + "-";
-      var str1 = [((ymd.getMonth() + 1) < 10) ? '0' + (ymd.getMonth() + 1) : (ymd.getMonth() + 1)] + "-"
-      var str2 = (ymd.getDate() < 10) ? '0' + ymd.getDate() : ymd.getDate();
-      dayArray.push(str + str1 + str2);
-    }
-    for (let j = 0; j < dayArray.length; j++) {
-      dateArray[j] = 0
-    }
-    this._OrderServesService
-      .getOrders('', 0, 0, "", "", " ", "", "", "", "", day, "", endDay)
-      .subscribe((res) => {
-        for (let i in res) {
-          for (let k = 0; k < dateArray.length; k++) {
-            if (res[i]['actualShipDateTime'] != null && (res[i]['actualShipDateTime']).indexOf(dayArray[k]) >= 0) {
-              dateArray[k]++;
-              break;
-            }
-          }
+    carrierArray = this._.unique(carrierArray).concat();
+    newcarrierArray = carrierArray.concat();
+    for (let z = 0; z < carrierArray.length; z++) {
+      for (let k = 0; k < newcarrierArray.length; k++) {
+        if (newcarrierArray[k] == "STO" ||
+          newcarrierArray[k] == "ZTO" ||
+          newcarrierArray[k] == "YUNDA" ||
+          newcarrierArray[k] == 'POSTB' ||
+          newcarrierArray[k] == 'SF') { }
+        else {
+          newcarrierArray.splice(k, 1);
         }
-        this.option.series[1].data = dateArray;
-        console.log(dateArray);
-        // myChart.setOption(this.option);
-      })
-  }
+      }
+    }
 
+    var complate: number[] = new Array(newcarrierArray.length);
+    var unfinished: number[] = new Array(newcarrierArray.length);
+    for (let j = 0; j < newcarrierArray.length; j++) {
+      complate[j] = 0;
+      unfinished[j] = 0
+    }
+    for (let i in this.orders) {
+      for (let j = 0; j < newcarrierArray.length; j++) {
+        if (this.orders[i]['carrier'] === newcarrierArray[j] && this.orders[i]['trailingSts'] == '900') {
+          complate[j]++;break;
+        } 
+        if(this.orders[i]['carrier'] === newcarrierArray[j]){
+          unfinished[j]++;break;
+        }
+      }
+    }
+    for (let k = 0; k < newcarrierArray.length; k++) {
+      if (newcarrierArray[k] == "STO") {newcarrierArray[k]='申通';}   
+      if (newcarrierArray[k] == "ZTO") {newcarrierArray[k]='中通';} 
+      if (newcarrierArray[k] == "YUNDA") {newcarrierArray[k]='韵达';} 
+      if (newcarrierArray[k] == "POSTB") {newcarrierArray[k]='邮政';} 
+      if (newcarrierArray[k] == "SF") {newcarrierArray[k]='顺丰';}    
+    }
+    var myChart = echarts.init(document.getElementById('carrier'));
+    this.chartInit();
+    this.option.xAxis[0].data = newcarrierArray;
+    this.option.series[0].data = complate;
+    this.option.series[1].data = unfinished;
+    myChart.setOption(this.option);
+  }
   chartInit() {
     this.option = {
       backgroundColor: '#464298',
@@ -109,9 +92,9 @@ export class WeekLineComponent implements OnInit {
       },
       grid: {
         left: '0%',
-        right: '1%',
-        bottom: '40%',
-        top: '10%',
+        right: '10%',
+        bottom: '45%',
+        top: '20%',
         containLabel: true
       },
       xAxis: [
@@ -175,20 +158,21 @@ export class WeekLineComponent implements OnInit {
         }
       }],
       series: [{
-        name: '单量',
+        name: '已发运',
         type: 'line',
-        stack: '总量',
         smooth: true,
+        stack: '总量',
         symbol: 'circle',
         symbolSize: 5,
         showSymbol: false,
-        animationDelay: 0,
+        animationDelay: 2000,
         animationDuration: 1000,
         markPoint: {
+          // symbol: 'image://url',
           data: [
             { type: 'max', name: '最大值' }
           ],
-          animationDelay: 1000,
+          animationDelay: 3000,
           animationDuration: 1000
         },
         lineStyle: {
@@ -201,9 +185,9 @@ export class WeekLineComponent implements OnInit {
               x2: 1,
               y2: 0,
               colorStops: [{
-                offset: 0, color: 'red' // 0% 处的颜色
+                offset: 0, color: '#088EC5' // 0% 处的颜色
               }, {
-                offset: 1, color: 'yellowgreen' // 100% 处的颜色
+                offset: 1, color: 'grey' // 100% 处的颜色
               }],
               globalCoord: false // 缺省为 false
             },
@@ -214,10 +198,10 @@ export class WeekLineComponent implements OnInit {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
               offset: 0,
-              color: 'rgba(219, 50, 51, 0.3)'
+              color: 'rgba(137, 189, 27, 0.3)'
             }, {
               offset: 0.8,
-              color: 'rgba(219, 50, 51, 0)'
+              color: 'rgba(137, 189, 27, 0)'
             }], false),
             shadowColor: 'rgba(0, 0, 0, 0.1)',
             shadowBlur: 10
@@ -225,15 +209,15 @@ export class WeekLineComponent implements OnInit {
         },
         itemStyle: {
           normal: {
-            color: 'rgb(219,50,51)',
-            borderColor: 'rgba(219,50,51,0.2)',
+            color: 'rgb(137,189,27)',
+            borderColor: 'rgba(137,189,2,0.27)',
             borderWidth: 12
+
           }
         },
-        data: []
-      },
-      {
-        name: '生产量',
+        data: [220, 182, 191, 134, 250, 120, 110, 125, 145, 122, 165, 122]
+      }, {
+        name: '未发运',
         type: 'line',
         smooth: true,
         symbol: 'circle',
@@ -289,13 +273,8 @@ export class WeekLineComponent implements OnInit {
 
           }
         },
-        data: []
+        data: [120, 110, 125, 145, 122, 165, 122, 220, 282, 191, 134, 150]
       }]
     };
   }
 }
-
-
-
-
-

@@ -25,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private stateArray = [];
   private ownerOrder = [];
   private fiveOwnerOrder = [];
+  private orders;
 
   private timer;
   private timer1;
@@ -38,15 +39,19 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getHeight();
     this.getOrderTotal();
-    this.getTotalOwner();
-    this.getState();
+    // this.getTotalOwner();
     this.getOrderByOwner();
+    
+    var timer2;
+    timer2=setInterval(()=>{
+      if(this.orders!=undefined){
+        this.getState();
+        clearInterval(timer2);
+      }
+    },500)
     this.timer = setInterval(() => {
       this.getNow();
-    }, 1000);
-    setInterval(() => {
-      this.getOrderTotal();
-    }, 3000);
+    }, 1000); 
     this.timer1 = setInterval(() => {
       this.getTotalOwner();
       this.getState();
@@ -73,19 +78,20 @@ export class AppComponent implements OnInit, OnDestroy {
     let logo = document.getElementById('logo');
     logo.style.height = this.clientHeight * .09 + 'px';
     header.style.height = this.clientHeight * .1 + 'px';
-    body.style.height = this.clientHeight * .74 + 'px';
-    foot.style.height = this.clientHeight * .39 + 'px';
+    body.style.height = this.clientHeight * .59 + 'px';
+    foot.style.height = this.clientHeight * .29 + 'px';
     this.spinnerDiameter = parseInt(this.clientHeight / 12 + '');
   }
   getOrderTotal() {
     var yestoday = this._OrderServesService.formatTime(new Date());
     this._OrderServesService
-      .getOrders('', 0, 0, "", "", " ", "", "", "", "", yestoday, "")
+      .getOrders('', 0, 0, "", "", " ", "", "", "", "", yestoday, "", "")
       .subscribe((res) => {
         var length = 0;
         for (let i in res) {
           length++;
         }
+        this.orders = res;
         this.orderTotal = length * this.multiple;
       })
   }
@@ -101,58 +107,36 @@ export class AppComponent implements OnInit, OnDestroy {
       })
   }
   getState() {
-    var yestoday = this._OrderServesService.formatTime(new Date());
-
     this.stateArray = [];
+    let send = 0, fuhe = 0, jianhuo = 0, pool=0;
     // 已发运
-    this._OrderServesService
-      .getOrders('', 0, 900, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.stateArray.push({ name: '已发运', total: length * this.multiple });
-      })
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '900') {
+        send++;
+      }
+    }
+    this.stateArray.push({ name: '已发运', total: send * this.multiple });
     // 待复核
-    this._OrderServesService
-      .getOrders('', 0, 700, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this._OrderServesService
-          .getOrders('', 0, 750, "", "", " ", "", "", "", "", yestoday, "")
-          .subscribe((r) => {
-            var s = 0;
-            for (let j in result) {
-              s++;
-            }
-            this.stateArray.push({ name: '待复核', total: (length + s) * this.multiple });
-          })
-      })
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '700') {
+        fuhe++;
+      }
+    }
+    this.stateArray.push({ name: '待复核', total: fuhe * this.multiple });
     // 待拣货
-    this._OrderServesService
-      .getOrders('', 0, 300, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.stateArray.push({ name: '待拣货', total: length * this.multiple });
-      })
-
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '300') {
+        jianhuo++;
+      }
+    }
+    this.stateArray.push({ name: '待拣货', total: jianhuo * this.multiple });
     // 订单池
-    this._OrderServesService
-      .getOrders('', 0, 100, "", "", " ", "", "", "", "", yestoday, "")
-      .subscribe((result) => {
-        var length = 0;
-        for (let j in result) {
-          length++;
-        }
-        this.stateArray.push({ name: '订单池', total: length * this.multiple });
-      })
+    for (let i in this.orders) {
+      if (this.orders[i]['trailingSts'] == '100') {
+        pool++;
+      }
+    }
+    this.stateArray.push({ name: '订单池', total: pool * this.multiple });
   }
   getOrderByOwner() {
     var yestoday = this._OrderServesService.formatTime(new Date());
@@ -164,7 +148,7 @@ export class AppComponent implements OnInit, OnDestroy {
         for (let i in result) {
           for (let j in result[i]) {
             this._OrderServesService
-              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "")
+              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "", "")
               .subscribe((res) => {
                 let length = 0;
                 for (let k in res)
@@ -178,7 +162,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       })
   }
-
   sortTotal(a, b) {
     return b.total - a.total
   }
