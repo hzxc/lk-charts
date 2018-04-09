@@ -20,6 +20,8 @@ export class PollComponent implements OnInit, OnDestroy {
   private pool: number;
   private orderTotal: number;
 
+  private timer1;
+
   constructor(
     private _OrderServesService: OrderServesService
   ) { }
@@ -31,13 +33,16 @@ export class PollComponent implements OnInit, OnDestroy {
         this.getState();
         clearInterval(timer);
       }
-    }, 1000)
+    }, 500)
+    this.timer1= setInterval(() => {
+        this.getState();
+    }, 5000)
   }
   ngOnDestroy(): void {
 
   }
   getState() {
-    let send = 0, number = 0, lengt = 0;
+    let send = 0, number = 0, length= 0;
     for (let i in this.orders) {
       length++
     }

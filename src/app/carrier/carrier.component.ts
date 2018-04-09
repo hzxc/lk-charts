@@ -13,6 +13,7 @@ export class CarrierComponent implements OnInit {
   private orders;
 
   private option;
+  private timer1;
 
   constructor(
     private _: OrderServesService
@@ -24,7 +25,10 @@ export class CarrierComponent implements OnInit {
         this.getCarrier();
         clearInterval(timer);
       }
-    }, 1000)
+    }, 500);
+    this.timer1 = setInterval(() => {
+      this.getCarrier();
+    }, 5000);
   }
 
   //YUNDA ZTO ZT SF POSTB
@@ -58,19 +62,19 @@ export class CarrierComponent implements OnInit {
     for (let i in this.orders) {
       for (let j = 0; j < newcarrierArray.length; j++) {
         if (this.orders[i]['carrier'] === newcarrierArray[j] && this.orders[i]['trailingSts'] == '900') {
-          complate[j]++;break;
-        } 
-        if(this.orders[i]['carrier'] === newcarrierArray[j]){
-          unfinished[j]++;break;
+          complate[j]++; break;
+        }
+        if (this.orders[i]['carrier'] === newcarrierArray[j]) {
+          unfinished[j]++; break;
         }
       }
     }
     for (let k = 0; k < newcarrierArray.length; k++) {
-      if (newcarrierArray[k] == "STO") {newcarrierArray[k]='申通';}   
-      if (newcarrierArray[k] == "ZTO") {newcarrierArray[k]='中通';} 
-      if (newcarrierArray[k] == "YUNDA") {newcarrierArray[k]='韵达';} 
-      if (newcarrierArray[k] == "POSTB") {newcarrierArray[k]='邮政';} 
-      if (newcarrierArray[k] == "SF") {newcarrierArray[k]='顺丰';}    
+      if (newcarrierArray[k] == "STO") { newcarrierArray[k] = '申通'; }
+      if (newcarrierArray[k] == "ZTO") { newcarrierArray[k] = '中通'; }
+      if (newcarrierArray[k] == "YUNDA") { newcarrierArray[k] = '韵达'; }
+      if (newcarrierArray[k] == "POSTB") { newcarrierArray[k] = '邮政'; }
+      if (newcarrierArray[k] == "SF") { newcarrierArray[k] = '顺丰'; }
     }
     var myChart = echarts.init(document.getElementById('carrier'));
     this.chartInit();
@@ -92,9 +96,9 @@ export class CarrierComponent implements OnInit {
       },
       grid: {
         left: '0%',
-        right: '10%',
-        bottom: '45%',
-        top: '20%',
+        right: '0%',
+        bottom: '0%',
+        top: '3%',
         containLabel: true
       },
       xAxis: [
@@ -134,7 +138,7 @@ export class CarrierComponent implements OnInit {
         }],
       yAxis: [{
         type: 'value',
-        name: '单位（%）',
+        name: '单量',
         axisTick: {
           show: false
         },

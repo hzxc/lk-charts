@@ -21,8 +21,9 @@ export class orderStateComponent implements OnInit, OnDestroy {
 
   private fuhe: number;
   private jianhuo: number;
-  private orderTotal:number;
+  private orderTotal: number;
 
+  private timer1;
 
   constructor(
     private _OrderServesService: OrderServesService
@@ -34,15 +35,19 @@ export class orderStateComponent implements OnInit, OnDestroy {
       if (this.orders != undefined) {
         this.getState();
         clearInterval(timer);
+        this.timer1 = setInterval(() => {
+          this.getState();
+        }, 5000)
       }
     }, 1000)
+
   }
   ngOnDestroy(): void {
-    
+    clearInterval(this.timer1);
   }
 
   getState() {
-    let send = 0, number = 0, lengt = 0;
+    let send = 0, number = 0, length = 0;
     for (let i in this.orders) {
       length++
     }
@@ -60,6 +65,8 @@ export class orderStateComponent implements OnInit, OnDestroy {
     }
     this.fuhe = send * this.multiple;
     this.jianhuo = number * this.multiple;
-    this.orderTotal = length * this.multiple;
+    this.orderTotal = length * this.multiple;    
   }
+
+  
 }

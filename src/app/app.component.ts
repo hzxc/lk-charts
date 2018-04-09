@@ -39,24 +39,17 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getHeight();
     this.getOrderTotal();
-    // this.getTotalOwner();
-    this.getOrderByOwner();
-    
-    var timer2;
-    timer2=setInterval(()=>{
-      if(this.orders!=undefined){
-        this.getState();
-        clearInterval(timer2);
-      }
-    },500)
+    // this.getState();
+
+    //顶部时间
     this.timer = setInterval(() => {
       this.getNow();
     }, 1000); 
+
     this.timer1 = setInterval(() => {
-      this.getTotalOwner();
+      this.getOrderTotal();
       this.getState();
-      this.getOrderByOwner();
-    }, 1000 * 60 * 30);
+    }, 30000);
   }
 
   ngOnDestroy(): void {
@@ -84,8 +77,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
   getOrderTotal() {
     var yestoday = this._OrderServesService.formatTime(new Date());
+
     this._OrderServesService
-      .getOrders('', 0, 0, "", "", " ", "", "", "", "", yestoday, "", "")
+      .getOrders("", 0, 0, "", "", " ", "", "", "", "", yestoday, "", "")
       .subscribe((res) => {
         var length = 0;
         for (let i in res) {
@@ -95,17 +89,17 @@ export class AppComponent implements OnInit, OnDestroy {
         this.orderTotal = length * this.multiple;
       })
   }
-  getTotalOwner() {
-    this._OrderServesService
-      .getOwners()
-      .subscribe((res) => {
-        let length = 0;
-        for (let i in res) {
-          length++;
-        }
-        this.ownerTotal = length;
-      })
-  }
+  // getTotalOwner() {
+  //   this._OrderServesService
+  //     .getOwners()
+  //     .subscribe((res) => {
+  //       let length = 0;
+  //       for (let i in res) {
+  //         length++;
+  //       }
+  //       this.ownerTotal = length;
+  //     })
+  // }
   getState() {
     this.stateArray = [];
     let send = 0, fuhe = 0, jianhuo = 0, pool=0;
@@ -138,30 +132,32 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     this.stateArray.push({ name: '订单池', total: pool * this.multiple });
   }
-  getOrderByOwner() {
-    var yestoday = this._OrderServesService.formatTime(new Date());
-    this.ownerOrder = [];
-    this.fiveOwnerOrder = []
-    this._OrderServesService
-      .getOwners()
-      .subscribe((result) => {
-        for (let i in result) {
-          for (let j in result[i]) {
-            this._OrderServesService
-              .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "", "")
-              .subscribe((res) => {
-                let length = 0;
-                for (let k in res)
-                  length++;
-                this.ownerOrder.push({ 'name': result[i][j], 'total': length * this.multiple })
-                this.ownerOrder.sort(this.sortTotal);
-                this.fiveOwnerOrder = this.ownerOrder.concat();
-                this.fiveOwnerOrder.splice(6);
-              })
-          }
-        }
-      })
-  }
+  // getOrderByOwner() {
+  //   var yestoday = this._OrderServesService.formatTime(new Date());
+  //   this.ownerOrder = [];
+  //   this.fiveOwnerOrder = []
+  //   this._OrderServesService
+  //     .getOwners()
+  //     .subscribe((result) => {
+  //       for (let i in result) {
+  //         for (let j in result[i]) {
+  //           this._OrderServesService
+  //             .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "", "")
+  //             .subscribe((res) => {
+  //               let length = 0;
+  //               for (let k in res)
+  //                 length++;
+  //               this.ownerOrder.push({ 'name': result[i][j], 'total': length * this.multiple })
+  //               this.ownerOrder.sort(this.sortTotal);
+  //               this.fiveOwnerOrder = this.ownerOrder.concat();
+  //               this.fiveOwnerOrder.splice(6);
+  //             })
+  //         }
+  //       }
+  //     })
+  // }
+
+
   sortTotal(a, b) {
     return b.total - a.total
   }

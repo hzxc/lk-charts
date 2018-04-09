@@ -20,6 +20,11 @@ module.exports = function (config) {
       fixWebpackSourcePaths: true
     },
     angularCli: {
+
+
+
+
+      
       environment: 'dev'
     },
     reporters: ['progress', 'kjhtml'],

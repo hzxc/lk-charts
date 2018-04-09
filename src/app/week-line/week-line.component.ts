@@ -13,12 +13,17 @@ export class WeekLineComponent implements OnInit {
   private multiple;
   private option;
 
+  private xLabel = [];
+  private data = [];
+
   constructor(
     private _OrderServesService: OrderServesService
   ) { }
 
   ngOnInit() {
     this.getOrder();
+    this.getProduct();
+
   }
 
   getOrder() {
@@ -31,26 +36,25 @@ export class WeekLineComponent implements OnInit {
     var ymd = new Date(today.setDate(today.getDate() - 11));
     for (let i = 0; i < 10; i++) {
       ymd = new Date(ymd.setDate(ymd.getDate() + 1));
+      let yestoday = new Date(ymd);
+      yestoday.setDate(yestoday.getDate() - 1);
       var str = ymd.getFullYear() + "-" + (ymd.getMonth() + 1) + "-" + ymd.getDate();
-      var str1 = ymd.getFullYear() + "-" + (ymd.getMonth() + 1) + "-" + (ymd.getDate() - 1);
+      var str1 = yestoday.getFullYear() + "-" + (yestoday.getMonth() + 1) + "-" + (yestoday.getDate());
       dateArray.push(str);
       newDateArray.push(str1)
     }
     for (let j = 0; j < dateArray.length; j++) {
       this._OrderServesService
-        .getOrders('', 0, 0, "", "", " ", "", "", "", "", newDateArray[j] + "  16:00:00", "", dateArray[j] + "  16:00:00")
-        .subscribe((res) => {
+        .getOrders("", 0, 0, "", "", " ", "", "", "", "", newDateArray[j] + "  16:00:00", "", dateArray[j] + "  16:00:00")
+        .subscribe((res) => {          
           var length = 0;
           for (let j in res) {
             length++;
           }
           xLabel[j] = (dateArray[j].substr(7) + '日');
           data[j] = (length);
-          this.chartInit();
-          this.option.xAxis[0].data = xLabel;
-          this.option.series[0].data = data;
-          // this.option.series[1].data = dateArray;
-          // myChart.setOption(this.option);
+          this.xLabel = xLabel;
+          this.data = data;
         })
     }
     this.getProduct();
@@ -80,7 +84,7 @@ export class WeekLineComponent implements OnInit {
       dateArray[j] = 0
     }
     this._OrderServesService
-      .getOrders('', 0, 0, "", "", " ", "", "", "", "", day, "", endDay)
+      .getOrders("", 0, 0, "", "", "","", "", "", "", day, "", endDay)
       .subscribe((res) => {
         for (let i in res) {
           for (let k = 0; k < dateArray.length; k++) {
@@ -90,100 +94,104 @@ export class WeekLineComponent implements OnInit {
             }
           }
         }
+        this.chartInit();
+        this.option.xAxis[0].data = this.xLabel;
+        this.option.series[0].data = this.data;
         this.option.series[1].data = dateArray;
-        console.log(dateArray);
-        // myChart.setOption(this.option);
+        myChart.setOption(this.option);
       })
   }
 
   chartInit() {
     this.option = {
-      backgroundColor: '#464298',
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           lineStyle: {
             color: '#57617B'
           }
-        }
+        },
+        backgroundColor: 'rgba(255,255,255,1)',
+        padding: [5, 10],
+        textStyle: {
+          color: '#7588E4',
+        },
+        extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
       },
       grid: {
         left: '0%',
-        right: '1%',
-        bottom: '40%',
+        right: '0%',
+        bottom: '0%',
         top: '10%',
         containLabel: true
       },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#0E2A43'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 14,
-              color: '#D5CBE8'
-            }
-          },
-          axisTick: {
-            show: false
-          },
-          data: []
-        }, {
-          axisPointer: {
-            show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#0E2A43'
-            }
-          },
-          axisTick: {
-            show: false
-          },
-          position: 'bottom',
-          offset: 20
-        }],
-      yAxis: [{
-        type: 'value',
-        name: '单位（%）',
+      xAxis:[{
+        type: 'category',
+        data: [],
+        boundaryGap: false,
+        splitLine: {
+          show: true,
+          interval: 'auto',
+          lineStyle: {
+            color: ['#464298']
+          }
+        },
         axisTick: {
           show: false
         },
         axisLine: {
           lineStyle: {
-            color: '#0E2A43'
+            color: '#D5CBE8'
           }
         },
         axisLabel: {
           margin: 10,
           textStyle: {
-            fontSize: 14,
-            color: '#D5CBE8'
-          }
-        },
-        splitLine: {
-          show: false,
-          lineStyle: {
-            color: '#57617B'
+            fontSize: 14
           }
         }
       }],
+      yAxis: {
+        type: 'value',
+        splitLine: {
+          lineStyle: {
+            color: ['#464298']
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#D5CBE8'
+          }
+        },
+        axisLabel: {
+          margin: 10,
+          textStyle: {
+            fontSize: 14
+          }
+        }
+      },
       series: [{
         name: '单量',
         type: 'line',
-        stack: '总量',
         smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
         showSymbol: false,
-        animationDelay: 0,
-        animationDuration: 1000,
+        symbol: 'circle',
+        symbolSize: 6,
+        data: [],
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: 'rgba(199, 237, 250,0.1)'
+            }, {
+              offset: 1,
+              color: 'rgba(199, 237, 250,0.1)'
+            }], false)
+          }
+        },
         markPoint: {
           data: [
             { type: 'max', name: '最大值' }
@@ -210,37 +218,21 @@ export class WeekLineComponent implements OnInit {
             opacity: 0.9
           }
         },
-        areaStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-              offset: 0,
-              color: 'rgba(219, 50, 51, 0.3)'
-            }, {
-              offset: 0.8,
-              color: 'rgba(219, 50, 51, 0)'
-            }], false),
-            shadowColor: 'rgba(0, 0, 0, 0.1)',
-            shadowBlur: 10
-          }
-        },
         itemStyle: {
           normal: {
             color: 'rgb(219,50,51)',
             borderColor: 'rgba(219,50,51,0.2)',
             borderWidth: 12
           }
-        },
-        data: []
-      },
-      {
-        name: '生产量',
+        }
+      }, {
+        name: '发运量',
         type: 'line',
         smooth: true,
+        showSymbol: false,
         symbol: 'circle',
-        stack: '总量',
-        symbolSize: 5,
-        animationDelay: 1000,
-        animationDuration: 1000,
+        symbolSize: 6,
+        data: [],
         markPoint: {
           data: [
             { type: 'max', name: '最大值' }
@@ -248,7 +240,6 @@ export class WeekLineComponent implements OnInit {
           animationDelay: 2000,
           animationDuration: 1000
         },
-        showSymbol: false,
         lineStyle: {
           normal: {
             width: 1,
@@ -257,7 +248,7 @@ export class WeekLineComponent implements OnInit {
               x: 0,
               y: 0,
               x2: 1,
-              y2: 0,
+              y2: 1,
               colorStops: [{
                 offset: 0, color: 'green' // 0% 处的颜色
               }, {
@@ -265,17 +256,17 @@ export class WeekLineComponent implements OnInit {
               }],
               globalCoord: false // 缺省为 false
             },
-            opacity: 0.9
+            opacity: 0.99
           }
         },
         areaStyle: {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
               offset: 0,
-              color: 'rgba(0, 236, 212, 0.3)'
+              color: 'rgba(0, 236, 212, 0)'
             }, {
               offset: 0.8,
-              color: 'rgba(0, 236, 212, 0)'
+              color: 'rgba(0, 236, 212,0)'
             }], false),
             shadowColor: 'rgba(0, 0, 0, 0.1)',
             shadowBlur: 10
@@ -286,16 +277,9 @@ export class WeekLineComponent implements OnInit {
             color: 'rgb(0,136,212)',
             borderColor: 'rgba(0,136,212,0.2)',
             borderWidth: 12
-
           }
         },
-        data: []
       }]
     };
   }
 }
-
-
-
-
-

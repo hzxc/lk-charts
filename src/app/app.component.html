@@ -12,6 +12,8 @@
                     <!-- 解决柱形图响应思 -->
                     <mat-card-content style="opacity:0 !important;">
                         <app-bar-cart [orders]="orders"></app-bar-cart>
+                        <app-carrier [orders]="orders"> </app-carrier>
+                        <app-time-list [orders]="orders"></app-time-list>
                     </mat-card-content>
                     <mat-card-content>
                         <span class="blue iconFont" style="position:absolute;right:5%;bottom:30%">{{orderTotal}}</span>
@@ -36,9 +38,9 @@
                 </mat-card>
             </div>
             <div fxFlexOffset=".5" fxFlex="49.5">
-                <mat-card fxFlex="55" class="border">
-                    <mat-card-title>状态柱状图</mat-card-title>
-                    <mat-card-content>
+                <mat-card fxFlex="55" class="border" fxLayout="column">
+                    <mat-card-title fxFlex="10">状态柱状图</mat-card-title>
+                    <mat-card-content fxFlex="90">
                         <app-bar-cart [orders]="orders"></app-bar-cart>
                     </mat-card-content>
                 </mat-card>
@@ -55,14 +57,14 @@
             <mat-card fxLayout="column" fxFlex="100" class="border">
                 <mat-card-title fxFlex="10">区域订单分布图</mat-card-title>
                 <mat-card-content fxFlex="90">
-                    <app-line-chart fxFlex="100"></app-line-chart>
+                    <app-line-chart [orders]="orders" fxFlex="100"></app-line-chart>
                 </mat-card-content>
             </mat-card>
         </div>
         <div fxFlexOffset=".5" fxFlex="20" fxLayout="column" fxLayoutAlign="space-between stretch">
-            <mat-card fxFlex="49" class="border">
-                <mat-card-title>承运商状态曲线图</mat-card-title>
-                <mat-card-content>
+            <mat-card fxFlex="49" class="border" fxLayout="column">
+                <mat-card-title fxFlex="10">承运商状态曲线图</mat-card-title>
+                <mat-card-content fxFlex="90">
                     <app-carrier [orders]="orders"> </app-carrier>
                 </mat-card-content>
             </mat-card>
@@ -76,32 +78,37 @@
     </div>
     <!-- foot -->
     <div row id="foot">
-        <mat-card fxFlex="24" class="border">
+        <mat-card fxFlex="20" class="border">
             <mat-card-title>阶段订单状态</mat-card-title>
             <mat-card-content>
                 <app-poll [spinnerDiameter]="spinnerDiameter" [orders]="orders" [multiple]="multiple"></app-poll>
             </mat-card-content>
         </mat-card>
-        <mat-card fxFlexOffset="1" fxFlex="24" class="border">
+        <mat-card fxFlexOffset="1" fxFlex="20" class="border">
             <mat-card-title>阶段订单状态</mat-card-title>
             <mat-card-content>
                 <app-order-state [spinnerDiameter]="spinnerDiameter" [orders]="orders" [multiple]="multiple"></app-order-state>
             </mat-card-content>
         </mat-card>
-        <mat-card fxFlexOffset="1" fxFlex="24" class="border">
-            <mat-card-title>近期销量曲线图</mat-card-title>
-            <mat-card-content>
+        <mat-card fxFlexOffset="1" fxFlex="29"  fxLayout="column" class="border">
+            <mat-card-title  fxFlex="10">近期销量曲线图</mat-card-title>
+            <mat-card-content  fxFlex="90">
                 <app-week-line [multiple]="multiple"></app-week-line>
                 <!-- <app-area-list [orderTotal]="orderTotal" [multiple]="multiple"></app-area-list> -->
             </mat-card-content>
 
         </mat-card>
-        <mat-card fxFlexOffset="1" fxFlex="25" class="border">
-            <mat-card-title>销量柱状图</mat-card-title>
-            <mat-card-content>
+        <mat-card fxFlexOffset="1" fxFlex="28"  fxLayout="column" class="border">
+            <mat-card-title fxFlex="10">销量柱状图</mat-card-title>
+            <mat-card-content fxFlex="90">
                 <!-- <app-diacrete-bar></app-diacrete-bar> -->
-                <app-time-list [fiveOwnerOrder]="ownerOrder"></app-time-list>
+                <app-time-list [orders]="orders"></app-time-list>
             </mat-card-content>
         </mat-card>
     </div>
 </div>
+
+<!-- 没有用到
+    <areat-list></areat-list>
+    <app-diacrete-bar></app-diacrete-bar>
+ -->

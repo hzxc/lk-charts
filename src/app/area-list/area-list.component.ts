@@ -39,34 +39,34 @@ export class areaListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.getOrderByProvince();
-        this.timer = setInterval(() => {
-            this.getOrderByProvince();
-        }, 1000 * 60 * 30)
+        // this.getOrderByProvince();
+        // this.timer = setInterval(() => {
+        //     this.getOrderByProvince();
+        // }, 1000 * 60 * 30)
     }
     ngOnDestroy(): void {
         clearInterval(this.timer);
     }
-    getOrderByProvince() {
-        this.ownerOrder = [];
-        this.fiveOwnerOrder = [];
-        var yestoday=this._OrderServesService.formatTime(new Date());
-        for (let i = 0; i < this.provinceArray.length; i++) {
-            this._OrderServesService
-                .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", yestoday, "","")
-                .subscribe((res) => {
-                    var length = 0;
-                    for (let j in res) {
-                        length++;
-                    }
-                    if (length > 0)
-                        this.ownerOrder.push({ 'name': this.provinceArray[i], 'total': length * this.multiple })
-                    this.ownerOrder.sort(this.sortTotal);
-                    this.fiveOwnerOrder = this.ownerOrder.concat();
-                    this.fiveOwnerOrder.splice(6);
-                })
-        }
-    }
+    // getOrderByProvince() {
+    //     this.ownerOrder = [];
+    //     this.fiveOwnerOrder = [];
+    //     var yestoday=this._OrderServesService.formatTime(new Date());
+    //     for (let i = 0; i < this.provinceArray.length; i++) {
+    //         this._OrderServesService
+    //             .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", yestoday, "","")
+    //             .subscribe((res) => {
+    //                 var length = 0;
+    //                 for (let j in res) {
+    //                     length++;
+    //                 }
+    //                 if (length > 0)
+    //                     this.ownerOrder.push({ 'name': this.provinceArray[i], 'total': length * this.multiple })
+    //                 this.ownerOrder.sort(this.sortTotal);
+    //                 this.fiveOwnerOrder = this.ownerOrder.concat();
+    //                 this.fiveOwnerOrder.splice(6);
+    //             })
+    //     }
+    // }
 
     sortTotal(a, b) {
         return b.total - a.total

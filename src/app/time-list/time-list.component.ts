@@ -16,7 +16,7 @@ export class TimeListComponent implements OnInit {
 
   private ownerOrder;
   @Input()
-  private fiveOwnerOrder;
+  private orders;
   private option;
   private timer;
   constructor(
@@ -25,17 +25,16 @@ export class TimeListComponent implements OnInit {
 
   ngOnInit(): void {
     let timer1 = setInterval(() => {
-      if (this.fiveOwnerOrder.length >= 81) {
+      if (this.orders != undefined) {
         this.get();
         clearInterval(timer1);
+        this.timer = setInterval(() => {
+          this.get();
+        }, 5000)
       }
     }, 1000)
 
-    this.timer = setInterval(() => {
-      this.get();
-    }, 1000 * 60 * 60)
   }
-
 
   ngOnDestroy(): void {
     clearInterval(this.timer);
@@ -44,146 +43,117 @@ export class TimeListComponent implements OnInit {
   get() {
     var myChart = echarts.init(document.getElementById('bar'));
     var bar1 = [];
-    var bar2 = [];
     var label = [];
-    for (let i = 0; i < 5; i++) {
-      bar1[i] = (this.fiveOwnerOrder[i]['total']);
-      label[i] = (this.fiveOwnerOrder[i]['name']);
-      var today = new Date();
-      var ymd = new Date(today.setDate(today.getDate() - 1));
-      var str = ymd.getFullYear() + "-" + (ymd.getMonth() + 1) + "-" + ymd.getDate();
-      this._OrderServesService
-        .getOrders(this.fiveOwnerOrder[i]['name'], 0, 0, "", "", " ", "", "", "", "", str + "  00:00:00", "", str + "  23:59:59")
-        .subscribe((res) => {
-          var length = 0;
-          for (let j in res) {
-            length++
-          }
-          bar2[i] = (length);
-          this.chartInit();
-          this.option.xAxis[0].data = label;
-          this.option.series[0].data = bar1;
-          this.option.series[1].data = bar2;
-          myChart.setOption(this.option);
-        })
+    for (let j = 0; j <= 3; j++) {
+      bar1[j] = 0;
     }
-
+    for (let i in this.orders) {
+      switch (this.orders[i]['company']) {
+        case 'YZH': bar1[0]++; break;
+        case 'BD':
+        case 'BSJP':
+        case 'YC':
+        case 'HLC':
+        case 'HPH':
+        case 'HQH':
+        case 'HYB':
+        case 'JAPU':
+        case 'JUIJUNI':
+        case 'JZ':
+        case 'KLT':
+        case 'MZL':
+        case 'NYJY':
+        case 'RB-B':
+        case 'SSHG':
+        case 'TIANKUO':
+        case 'YBYJ':
+        case 'YG':
+        case 'SHJY':
+        case 'CQLK': bar1[1]++; break;
+        case 'JINGPAI':
+        case 'TTXM':
+        case 'JGZ': bar1[2]++; break;
+        default: bar1[3]++; break;
+      }
+    }
+    this.chartInit();
+    this.option.xAxis[0].data = ['饰品组', '特服组', '食品组', '标准仓'];
+    this.option.series[0].data = bar1;
+    myChart.setOption(this.option);
   }
-
   chartInit() {
     this.option = {
       tooltip: {
-        trigger: 'axis',
-        axisPointer: { // 坐标轴指示器，坐标轴触发有效
-          type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-        }
+        trigger: 'axis'
       },
-      legend: {
-        data: ['今日', '昨日'],
-        align: 'right',
-        right: 10,
-        textStyle: {    //图例文字的样式
-          color: '#fff',
-          fontSize: 12
+      toolbox: {
+        show: true,
+        feature: {
+          magicType: { show: true, type: ['line', 'bar'] },
+          restore: { show: true },
         }
       },
       grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '45%',
-        containLabel: true,
+        left: '0%',
+        right: '0%',
+        bottom: '0%',
+        top: '11%',
+        containLabel: true
       },
-      xAxis: [{
-        splitLine: { show: false },//去除网格线
-        type: 'category',
-        data: [],
-        axisLabel: {
-          show: true,
-          textStyle: {
-            color: '#ccc'
-          }
-        }
-      }],
-      yAxis: [{
-        type: 'value',
-        name: '总量(单)',
-        axisLabel: {
-          formatter: '{value}',
-          textStyle: {
-            color: '#ccc'
-          }
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            color: '#514D97'
-          }
-        }
-      }],
-      series: [{
-        name: '今日',
-        type: 'bar',
-        data: [],
-        itemStyle: {
-          normal: {
-            color: 'orange'
-          }
-        },
-        label: {
-          normal: {
+      calculable: true,
+      xAxis: [
+        {
+          type: 'category',
+          data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+          axisLabel: {
             show: true,
-            position: 'top'
+            textStyle: {
+              color: '#ccc'
+            }
           }
         }
-      }, {
-        name: '昨日',
-        type: 'bar',
-        data: [],
-        itemStyle: {
-          normal: {
-            color: '#4ad2ff'
-          }
-        },
-        label: {
-          normal: {
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          axisLabel: {
             show: true,
-            position: 'top'
+            textStyle: {
+              color: '#ccc'
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#514D97'
+            }
           }
         }
-      }]
+      ],
+      series: [
+        {
+          name: '单数',
+          type: 'bar',
+          data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+          itemStyle: {
+            normal: {
+              color: function (params) {
+                // build a color map as your need.
+                var colorList = [
+                  '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
+                  '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'
+                ];
+                return colorList[params.dataIndex]
+              }, label: {
+                show: true,
+                position: 'top',
+                formatter: '{c}'
+              }
+            }
+          }
+        }
+      ]
     };
   }
-
-  // public barChartOptions: any = {
-  //   scaleShowVerticalLines: false,
-  //   responsive: true
-  // };
-  // public barChartLabels: string[] = ['', '', '', '', '', '', '', ''];
-  // public barChartType: string = 'bar';
-  // public barChartLegend: boolean = true;
-
-  // public barChartData: any[] = [
-  //   { data: [], label: '今日单量' },
-  //   { data: [], label: '昨日单量' },
-  // ];
-
-  // public barChartColors: Array<any> = [
-  //   { // orange
-  //     backgroundColor: 'rgba(255,165,0,0.8)',
-  //     borderColor: 'rgba(255,165,0,1)',
-  //     pointBackgroundColor: 'rgba(255,165,0,1)',
-  //     pointBorderColor: '#fff',
-  //     pointHoverBackgroundColor: '#fff',
-  //     pointHoverBorderColor: 'rgba(255,165,0,0.8)',
-  //     textColor:'#fff'
-  //   },
-  //   { // green
-  //     backgroundColor: 'rgba(0,165,0,0.8)',
-  //     borderColor: 'rgba(0,165,0,1)',
-  //     pointBackgroundColor: 'rgba(0,165,0,1)',
-  //     pointBorderColor: '#fff',
-  //     pointHoverBackgroundColor: '#fff',
-  //     pointHoverBorderColor: 'rgba(0,165,0,0.8)'
-  //   },
-  // ];
+ 
 }

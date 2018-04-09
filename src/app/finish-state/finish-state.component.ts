@@ -24,16 +24,17 @@ export class FinishStateComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    var timer1;
-    timer1 = setInterval(() => {
-      if (this.orders != undefined) {
-        this.getOrderByOwner();
-        clearInterval(timer1);
-      }
-    }, 500)
-    this.timer = setInterval(() => {
-      this.getOrderByOwner();
-    }, 1000 * 60 * 30)
+    // var timer1;
+    // timer1 = setInterval(() => {
+    //   if (this.orders != undefined) {
+    //     this.getOrderByOwner();
+    //     clearInterval(timer1);
+    //     this.timer = setInterval(() => {
+    //       this.getOrderByOwner();
+    //     }, 1000*60*30)
+    //   }
+    // }, 500)
+ 
   }
   ngOnDestroy(): void {
     clearInterval(this.timer);

@@ -14,7 +14,7 @@ export class BarCartComponent implements OnInit, OnDestroy {
   @Input()
   private orders;
 
-  private timer;
+  private timer1;
   private option;
 
   constructor(
@@ -22,18 +22,19 @@ export class BarCartComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getState();
-
     var timer;
     timer = setInterval(() => {
       if (this.orders != undefined) {
         this.getState();
         clearInterval(timer);
       }
-    }, 500)
+    }, 500);
+    this.timer1 = setInterval(() => {
+        this.getState();
+    }, 30000);
   }
   ngOnDestroy(): void {
-    clearInterval(this.timer)
+    clearInterval(this.timer1)
   }
   getState() {
     var stateArray = [];
@@ -89,8 +90,8 @@ export class BarCartComponent implements OnInit, OnDestroy {
       grid: {
         left: '0%',
         right: '0%',
-        bottom: '45%',
-        top: '10%',
+        bottom: '0%',
+        top: '11%',
         containLabel: true
       },
       calculable: true,
