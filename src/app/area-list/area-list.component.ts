@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { OrderServesService } from '../shared/order-serves.service';
 import { Input } from '@angular/core';
+import * as  echarts from 'echarts';
 
 // import 'highcharts/adapters/standalone-framework.src';
 // const Highcharts = require('highcharts/highcharts.src');
@@ -14,62 +15,158 @@ import { Input } from '@angular/core';
 export class areaListComponent implements OnInit, OnDestroy {
 
 
-    private provinceArray = [
-        '安徽省', '北京市', '重庆市', '福建省', '甘肃省',
-        '广东省', '广西省', '贵州省', '海南省', '河北省',
-        '黑龙江省', '河南省', '湖北省', '湖南省', '云南省',
-        '浙江省', '江苏省', '江西省', '吉林省', '辽宁省',
-        '内蒙古', '宁夏', '青海', '山东省', '上海市',
-        '山西省', '陕西省', '四川省', '天津市','台湾省',
-        '新疆维吾尔自治区', '西藏自治区'
-    ];
-
-    private ownerOrder = [];
-    private fiveOwnerOrder = [];
-
     @Input()
-    private orderTotal;
+     send;
     @Input()
-    private multiple;
+     poll;
 
-    private timer;
+     timer;
+     option;
 
     constructor(
         private _OrderServesService: OrderServesService
     ) { }
 
     ngOnInit(): void {
-        // this.getOrderByProvince();
-        // this.timer = setInterval(() => {
-        //     this.getOrderByProvince();
-        // }, 1000 * 60 * 30)
+        var myChart = echarts.init(document.getElementById('ring'));
+        var timer1 = setInterval(() => {
+            if (this.send != undefined && this.poll != undefined) {
+              this.chartsInit();           
+              clearInterval(timer1);
+      
+              this.timer = setInterval(() => {
+                this.chartsInit(); 
+      
+              }, 1000 * 60 * 5)
+            }
+          }, 500)
     }
     ngOnDestroy(): void {
         clearInterval(this.timer);
     }
-    // getOrderByProvince() {
-    //     this.ownerOrder = [];
-    //     this.fiveOwnerOrder = [];
-    //     var yestoday=this._OrderServesService.formatTime(new Date());
-    //     for (let i = 0; i < this.provinceArray.length; i++) {
-    //         this._OrderServesService
-    //             .getOrders('', 0, 0, "", this.provinceArray[i], " ", "", "", "", "", yestoday, "","")
-    //             .subscribe((res) => {
-    //                 var length = 0;
-    //                 for (let j in res) {
-    //                     length++;
-    //                 }
-    //                 if (length > 0)
-    //                     this.ownerOrder.push({ 'name': this.provinceArray[i], 'total': length * this.multiple })
-    //                 this.ownerOrder.sort(this.sortTotal);
-    //                 this.fiveOwnerOrder = this.ownerOrder.concat();
-    //                 this.fiveOwnerOrder.splice(6);
-    //             })
-    //     }
-    // }
 
-    sortTotal(a, b) {
-        return b.total - a.total
+    chartsInit() {
+        this.option = {
+            title: [
+                {
+                    text: '已发货',
+                    left: '23%',
+                    top: '2%',
+                    textAlign: 'center',
+                    textStyle: {
+                        fontWeight: 'normal',
+                        color: '#fff',
+                        fontSize: 15,
+                        textAlign: 'center',
+                    }
+                },
+                {
+                    text: (this.send/(this.send+this.poll)*100).toFixed(0)+"%",
+                    left: '22%',
+                    top: '80%',
+                    textAlign: 'center',
+                    textStyle: {
+                        fontWeight: 'normal',
+                        color: '#fff',
+                        fontSize: 16,
+                        textAlign: 'center',
+                    }
+                },
+                {
+                    text: '未发货',
+                    left: '66%',
+                    top: '2%',
+                    textAlign: 'center',
+                    textStyle: {
+                        fontWeight: 'normal',
+                        color: '#fff',
+                        fontSize: 15,
+                        textAlign: 'center',
+                    }
+                },
+                {
+                    text: (this.poll/(this.send+this.poll)*100).toFixed(0)+"%",
+                    left: '67%',
+                    top: '80%',
+                    textAlign: 'center',
+                    textStyle: {
+                        fontWeight: 'normal',
+                        color: '#fff',
+                        fontSize: 15,
+                        textAlign: 'center',
+                    }
+                }],
+            series: [
+                {
+                    type: 'liquidFill',
+                    // data: [0.6, 0.5, 0.4, 0.3],
+                    data: [(this.send/(this.send+this.poll)).toFixed(1)],
+                    direction: 'right', //波浪方向或者静止
+                    radius: '45%',
+                    // 水球颜色
+                    color: ['#00c2ff'],
+                    center: ['25%', '45%'], //水球位置
+                    // outline  外边
+                    outline: {
+                        // show: false
+                        borderDistance: 0, //内环padding值
+                        itemStyle: {
+                            borderWidth: 2, //圆边线宽度
+                            borderColor: '#00c2ff',
+                        },
+                    },
+                    label: {
+                        normal: {
+                            formatter: (this.send/(this.send+this.poll)*100).toFixed(0)+"%", //重置百分比字体为空
+                            // textStyle: {
+                            color: 'white',
+                            insideColor: 'yellow',
+                            fontSize: 10
+                            // }
+                        }
+                    },
+                    // 内图 背景色 边
+                    backgroundStyle: {
+                        color: 'rgba(4,24,74,0.8)',
+                        // borderWidth: 5,
+                        // borderColor: 'red',
+                    }
+                },
+                {
+                    type: 'liquidFill',
+                    data: [ (this.poll/(this.send+this.poll)).toFixed(1)],
+                    direction: 'right', //波浪方向或者静止
+                    radius: '45%',
+                    // 水球颜色
+                    color: ['#ffd97a'],
+                    center: ['67%', '45%'], //水球位置
+                    // outline  外边
+                    outline: {
+                        // show: false
+                        borderDistance: 0, //内环padding值
+                        itemStyle: {
+                            borderWidth: 2, //圆边线宽度
+                            borderColor: '#ffd97a',
+                        },
+                    },
+                    label: {
+                        normal: {
+                            formatter: (this.poll/(this.send+this.poll)*100).toFixed(0)+"%", //重置百分比字体为空
+                            // textStyle: {
+                            color: 'white',
+                            insideColor: 'yellow',
+                            fontSize: 10
+                            // }
+                        }
+                    },
+                    // 内图 背景色 边
+                    backgroundStyle: {
+                        color: 'rgba(4,24,74,0.8)',
+                        // borderWidth: 5,
+                        // borderColor: 'red',
+                    }
+                }]
+        };
     }
 
 }

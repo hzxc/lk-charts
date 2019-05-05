@@ -1,114 +1,108 @@
 <div class="container">
-    <div id="header">
-        <span>{{now}}</span>
-        <img src="../assets/logo.png" id="logo">
-    </div>
-    <!-- body -->
-    <div row id="body">
-        <div fxFlex="40" fxLayout="column" fxLayoutAlign="space-between stretch">
-            <div fxFlex="50">
-                <mat-card fxFlex="55" class="border">
-                    <mat-card-title>今日订单总数</mat-card-title>
-                    <!-- 解决柱形图响应思 -->
-                    <mat-card-content style="opacity:0 !important;">
-                        <app-bar-cart [orders]="orders"></app-bar-cart>
-                        <app-carrier [orders]="orders"> </app-carrier>
-                        <app-time-list [orders]="orders"></app-time-list>
-                    </mat-card-content>
-                    <mat-card-content>
-                        <span class="blue iconFont" style="position:absolute;right:5%;bottom:30%">{{orderTotal}}</span>
-                    </mat-card-content>
-                </mat-card>
-                <mat-card fxFlexOffset="1" fxFlex="44" class="border">
-                    <mat-card-title>实时发运状态</mat-card-title>
-                    <mat-card-content style="padding:0 20px">
-                        <div>
-                            <span>今日订单量</span>
-                            <span class="blue right">{{orderTotal}}</span>
-                        </div>
-                        <div>
-                            <ul>
-                                <li *ngFor="let state of stateArray">
-                                    <span>{{state.name}}</span>
-                                    <span class="red right">{{state.total}}</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-            <div fxFlexOffset=".5" fxFlex="49.5">
-                <mat-card fxFlex="55" class="border" fxLayout="column">
-                    <mat-card-title fxFlex="10">状态柱状图</mat-card-title>
-                    <mat-card-content fxFlex="90">
-                        <app-bar-cart [orders]="orders"></app-bar-cart>
-                    </mat-card-content>
-                </mat-card>
-                <mat-card fxFlexOffset="1" fxFlex="44" fxLayout="column" class="border">
-                    <mat-card-title fxFlex="10">未生产订单时效</mat-card-title>
-                    <mat-card-content fxFlex="90">
-                        <app-send-time fxFlex="100"></app-send-time>
-                        <!-- <span class="blue iconFont" style="position:absolute;right:5%;bottom:30%">{{ownerTotal}}</span> -->
-                    </mat-card-content>
-                </mat-card>
-            </div>
+    <div id="head">
+        <div class="images">
+            <img src="../assets/images/header-left.png" alt="">
+            <img src="../assets/images/header-right.png" alt="">
         </div>
-        <div fxFlexOffset=".5" fxFlex="49" fxLayout="column" fxLayoutAlign="space-between stretch">
-            <mat-card fxLayout="column" fxFlex="100" class="border">
-                <mat-card-title fxFlex="10">区域订单分布图</mat-card-title>
-                <mat-card-content fxFlex="90">
-                    <app-line-chart [orders]="orders" fxFlex="100"></app-line-chart>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div fxFlexOffset=".5" fxFlex="20" fxLayout="column" fxLayoutAlign="space-between stretch">
-            <mat-card fxFlex="49" class="border" fxLayout="column">
-                <mat-card-title fxFlex="10">承运商状态曲线图</mat-card-title>
-                <mat-card-content fxFlex="90">
-                    <app-carrier [orders]="orders"> </app-carrier>
-                </mat-card-content>
-            </mat-card>
-            <mat-card fxFlexOffset="2" fxFlex="49" class="border">
-                <mat-card-title>商家完成状态</mat-card-title>
-                <mat-card-content>
-                    <app-finish-state [orders]="orders" [multiple]="multiple"></app-finish-state>
-                </mat-card-content>
-            </mat-card>
+        <div class="title">
+            <h1>重庆电商仓配托管中心</h1>
         </div>
     </div>
-    <!-- foot -->
-    <div row id="foot">
-        <mat-card fxFlex="20" class="border">
-            <mat-card-title>阶段订单状态</mat-card-title>
-            <mat-card-content>
-                <app-poll [spinnerDiameter]="spinnerDiameter" [orders]="orders" [multiple]="multiple"></app-poll>
-            </mat-card-content>
-        </mat-card>
-        <mat-card fxFlexOffset="1" fxFlex="20" class="border">
-            <mat-card-title>阶段订单状态</mat-card-title>
-            <mat-card-content>
-                <app-order-state [spinnerDiameter]="spinnerDiameter" [orders]="orders" [multiple]="multiple"></app-order-state>
-            </mat-card-content>
-        </mat-card>
-        <mat-card fxFlexOffset="1" fxFlex="29"  fxLayout="column" class="border">
-            <mat-card-title  fxFlex="10">近期销量曲线图</mat-card-title>
-            <mat-card-content  fxFlex="90">
-                <app-week-line [multiple]="multiple"></app-week-line>
-                <!-- <app-area-list [orderTotal]="orderTotal" [multiple]="multiple"></app-area-list> -->
-            </mat-card-content>
-
-        </mat-card>
-        <mat-card fxFlexOffset="1" fxFlex="28"  fxLayout="column" class="border">
-            <mat-card-title fxFlex="10">销量柱状图</mat-card-title>
-            <mat-card-content fxFlex="90">
-                <!-- <app-diacrete-bar></app-diacrete-bar> -->
-                <app-time-list [orders]="orders"></app-time-list>
-            </mat-card-content>
-        </mat-card>
+    <div id="body">
+        <div class="bodyLeft">
+            <div class="card">
+                <div class="cardHead">
+                    <h5>订单阶段分析图</h5>
+                </div>
+                <div class="cardBody">
+                    <app-bar-cart [countArray]="countArray" [multiple]="multiple"></app-bar-cart>
+                </div>
+            </div>
+            <div class="card">
+                <div class="cardHead">
+                    <h5>订单发运占比</h5>
+                </div>
+                <div class="cardBody">
+                    <app-area-list [send]="stateArray[0]" [poll]="stateArray[1]+stateArray[2]"></app-area-list>
+                </div>
+            </div>
+        </div>
+        <div class="bodyMid">
+            <div class="mapHead">
+                <div class="mapHeadLabel mapHeadLabelType">
+                    <p class="title">今日订单总量(总)</p>
+                    <p countUp [startVal]="1" [endVal]="orderTotal" [reanimateOnClick]="true" [duration]='4' class="number">0</p>
+                </div>
+                <div class="mapHeadLabel mapHeadLabelType">
+                    <p class="title">今日订单(已生产)</p>
+                    <p countUp [startVal]="1" [endVal]="stateArray[0]" [reanimateOnClick]="true" [duration]='3' class="number">0</p>
+                </div>
+                <div class="mapHeadLabel mapHeadLabelType">
+                    <p class="title">今日订单(待生产)</p>
+                    <p countUp [startVal]="1" [endVal]="stateArray[1]" [reanimateOnClick]="true" [duration]='3' class="number">0</p>
+                </div>
+                <div class="mapHeadLabel mapHeadLabelType">
+                    <p class="title">今日订单(订单池)</p>
+                    <p countUp [startVal]="1" [endVal]="stateArray[2]" [reanimateOnClick]="true" [duration]='3' class="number">0</p>
+                </div>
+            </div>
+            <div class="map ">
+                <app-line-chart [multiple]="multiple"></app-line-chart>
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class="card">
+                <div class="cardHead">
+                    <h5>包裹重量占比</h5>
+                </div>
+                <div class="cardBody">
+                    <app-diacrete-bar [multiple]="multiple"></app-diacrete-bar>
+                </div>
+            </div>
+            <div class="card">
+                <div class="cardHead">
+                    <h5>订单组别分配</h5>
+                </div>
+                <div class="cardBody">
+                    <app-poll [multiple]="multiple"></app-poll>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="foot">
+        <div class="card">
+            <div class="cardHead">
+                <h5>订单下发生产量</h5>
+            </div>
+            <div class="cardBody">
+                <app-bar-multi [multiple]="multiple"></app-bar-multi>
+            </div>
+        </div>
+        <div class="card">
+            <div class="cardHead">
+                <h5>商家单量完成状态</h5>
+            </div>
+            <div class="cardBody">
+                <app-finish-state [multiple]="multiple"></app-finish-state>
+            </div>
+        </div>
+        <div class="card">
+            <div class="cardHead">
+                <h5>快递发运占比</h5>
+            </div>
+            <div class="cardBody">
+                <app-carrier [multiple]="multiple"> </app-carrier>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- 没有用到
-    <areat-list></areat-list>
-    <app-diacrete-bar></app-diacrete-bar>
- -->
+
+
+<!-- <div id="datanums" class="green">
+    <h1 countUp [endVal]="pickANumber" [reanimateOnClick]="true">0</h1>
+    <label>Change the end value:</label>
+    <input type="text" [(ngModel)]="pickANumber" style="display:block">
+</div> -->
+
+<!-- http://10.10.32.7/doc/page/preview.asp -->

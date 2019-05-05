@@ -1,11 +1,41 @@
-p{
+/* p{
     text-align: center
 }
 .number{
     position:absolute;
-    left:30px;
+    left:13px;
     top:30%; 
 }
 .container{
     padding-top:10%; 
+} */
+
+#gruop {
+    height: 55% !important;
+}
+
+#show {
+    height: 45% !important;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    margin-left: 2%;
+}
+
+ul li {
+    padding: 0.8%;
+    color: white;
+    font-size: 7px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    text-align: center
+}
+
+ul li span {
+    width: 25%;
+}
+
+.liBody {
+    color: #aaa !important;
 }

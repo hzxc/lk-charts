@@ -13,17 +13,17 @@ export class orderStateComponent implements OnInit, OnDestroy {
 
 
   @Input()
-  private spinnerDiameter: number;
+   spinnerDiameter: number;
   @Input()
-  private orders;
+   orders;
   @Input()
-  private multiple;
+   multiple;
 
-  private fuhe: number;
-  private jianhuo: number;
-  private orderTotal: number;
+   fuhe: number;
+   jianhuo: number;
+   orderTotal: number;
 
-  private timer1;
+   timer1;
 
   constructor(
     private _OrderServesService: OrderServesService
@@ -37,7 +37,7 @@ export class orderStateComponent implements OnInit, OnDestroy {
         clearInterval(timer);
         this.timer1 = setInterval(() => {
           this.getState();
-        }, 5000)
+        }, 30000)
       }
     }, 1000)
 
@@ -53,13 +53,13 @@ export class orderStateComponent implements OnInit, OnDestroy {
     }
     // 已发运
     for (let i in this.orders) {
-      if (this.orders[i]['trailingSts'] == '700') {
+      if (this.orders[i]['leadingSts'] == '700') {
         send++;
       }
     }
     //订单池
     for (let i in this.orders) {
-      if (this.orders[i]['trailingSts'] == '300') {
+      if (this.orders[i]['leadingSts'] == '300') {
         number++;
       }
     }

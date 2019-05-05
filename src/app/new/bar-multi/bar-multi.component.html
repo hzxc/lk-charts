@@ -1,0 +1,19 @@
+<div class="container">
+    <div id="barMulti" echarts [options]="optionBar"></div>
+    <div id="barShow01" class="barshow">
+        <ul>
+            <li class="white">
+                <span>(1号仓)</span>
+                <span>产量</span>
+                <span>(2号仓)</span>
+                <span>产量</span>
+            </li>
+            <li class="liBody" *ngFor="let li of threeOrders01;let i=index">
+                <span class="green">{{li.name}}</span>
+                <span class="blue">{{li.product}}</span>
+                <span class="green">{{threeOrders02[i].name}}</span>
+                <span class="blue">{{threeOrders02[i].product}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

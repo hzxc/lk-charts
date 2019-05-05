@@ -40,8 +40,8 @@ import { FloatingActionMenuModule } from 'ng2-floating-action-menu';
 import { AlertModule } from 'ng2-bootstrap';
 import { OrderServesService } from './shared/order-serves.service';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+// import { FlexLayoutModule } from '@angular/flex-layout';
+import {BrowserAnimationsModule,NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { FinishStateComponent } from './finish-state/finish-state.component';
 import { PollComponent } from './poll/poll.component';
@@ -52,13 +52,22 @@ import { LineChartComponent } from './line-chart/line-chart.component';
 import { TimeListComponent } from './time-list/time-list.component';
 import { EchartsModule } from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { CountUpModule } from 'countup.js-angular2';
 
-import * as $ from 'jquery';
 import { WeekLineComponent } from './week-line/week-line.component';
 import { DiacreteBarComponent } from './diacrete-bar/diacrete-bar.component';
 import { SendTimeComponent } from './send-time/send-time.component';
 import { CarrierComponent } from './carrier/carrier.component';
+import {enableProdMode} from '@angular/core';
+import { RingPieComponent } from './new/ring-pie/ring-pie.component';
+import { BarMultiComponent } from './new/bar-multi/bar-multi.component';
+import { GaugeComponent } from './new/gauge/gauge.component';
+import { Routes } from '@angular/router';
 
+import {MomentModule} from "angular2-moment";
+
+
+enableProdMode();
 
 @NgModule({
   declarations: [
@@ -74,6 +83,9 @@ import { CarrierComponent } from './carrier/carrier.component';
     DiacreteBarComponent,
     SendTimeComponent,
     CarrierComponent,
+    RingPieComponent,
+    BarMultiComponent,
+    GaugeComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,9 +98,11 @@ import { CarrierComponent } from './carrier/carrier.component';
     AppRoutingModule,
     NvD3Module,
     FormsModule,
+    MomentModule,
+    NoopAnimationsModule,
     FloatingActionMenuModule,
     AlertModule.forRoot(),
-    FlexLayoutModule,
+    // FlexLayoutModule,
     HttpClientModule,
     MatToolbarModule,   
     MatIconModule,
@@ -114,7 +128,8 @@ import { CarrierComponent } from './carrier/carrier.component';
     MatProgressBarModule,
     ChartsModule,
     // EchartsModule,
-    NgxEchartsModule
+    NgxEchartsModule,
+    CountUpModule
   ],
  exports:[
   MatProgressBarModule

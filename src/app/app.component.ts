@@ -4,162 +4,140 @@ import { OnInit, OnDestroy } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { OrderServesService } from './shared/order-serves.service';
-declare let d3: any;
+// import * as $ from'../assets/vsreen/jquery-1.7.1.min.js';
+import * as $ from 'jquery';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+// import * as z from '../assets/vsreen/demo.js'
+// import {
+//   WebVideoCtrl,
+//   webVideoCtrl,
+
+// } from '../assets/vsreen/webVideoCtrl.js'
+
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css', '../../node_modules/nvd3/build/nv.d3.css'],
+  styleUrls: ['./app.component.css',
+    '../../node_modules/nvd3/build/nv.d3.css'
+  ],
   encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
   public multiple = 1;  //修改整体数据，默认为1，值为倍数
 
-  private now;
-  private clientHeight;
-  private spinnerDiameter: number;
-  private orderTotal: number;
-  private ownerTotal: number;
-  private stateArray = [];
-  private ownerOrder = [];
-  private fiveOwnerOrder = [];
-  private orders;
+   now;
+   clientHeight;
+   orderTotal: number = 0;
+   stateArray = [];
+   orders01;
+   orders02;
+   ordersNewSystem01;
+   ordersNewSystem02;
 
-  private timer;
-  private timer1;
+   countArray = [];
+   timer;
 
   constructor(
-    private _OrderServesService: OrderServesService
+    private _OrderServesService: OrderServesService,
+    private router: Router,
+    private activateInfo: ActivatedRoute
   ) {
     this.clientHeight = window.screen.height;
   }
 
   ngOnInit(): void {
+    this.activateInfo.queryParams.subscribe(queryParams => {
+      if (queryParams.id != undefined) {
+        let mul = queryParams.id;
+        this.multiple = mul
+      }
+
+    })
+
     this.getHeight();
-    this.getOrderTotal();
-    // this.getState();
+    // this.getOrderTotal();
+    this.getRandState()
 
-    //顶部时间
     this.timer = setInterval(() => {
-      this.getNow();
-    }, 1000); 
+      // this.getOrderTotal();
+      this.getRandState
 
-    this.timer1 = setInterval(() => {
-      this.getOrderTotal();
-      this.getState();
-    }, 30000);
+    }, 1000 * 60 * 5)
+
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this.timer);
-    clearInterval(this.timer1);
-  }
 
   getNow() {
     let l = ["日", "一", "二", "三", "四", "五", "六"];
     let Now = new Date();
-    this.now = Now.getFullYear() + '年' + (Now.getMonth() + 1) + '月' + Now.getDate() + '日   '
-      + Now.getHours() + '时' + Now.getMinutes() + '分' + Now.getSeconds() + '秒    ';
+    this.now = Now.getFullYear() + '/' + (Now.getMonth() + 1) + '/' + Now.getDate() + '/   '
+      + [(Now.getHours() < 10) ? '0' + Now.getHours() : Now.getHours()] + ':'
+      + [(Now.getMinutes() < 10) ? '0' + Now.getMinutes() : Now.getMinutes()] + ':'
+      + [(Now.getSeconds() < 10) ? '0' + Now.getSeconds() : Now.getSeconds()] + '    ';
     this.now += "星期" + l[Now.getDay()];
   }
   getHeight() {
-    let header = document.getElementById('header');
+    let header = document.getElementById('head');
     let body = document.getElementById('body');
     let foot = document.getElementById('foot');
-    let logo = document.getElementById('logo');
-    logo.style.height = this.clientHeight * .09 + 'px';
-    header.style.height = this.clientHeight * .1 + 'px';
-    body.style.height = this.clientHeight * .59 + 'px';
-    foot.style.height = this.clientHeight * .29 + 'px';
-    this.spinnerDiameter = parseInt(this.clientHeight / 12 + '');
+    header.style.height = this.clientHeight * .06 + 'px';
+    body.style.height = this.clientHeight * .67 + 'px';
+    foot.style.height = this.clientHeight * .25 + 'px';
   }
+
   getOrderTotal() {
-    var yestoday = this._OrderServesService.formatTime(new Date());
-
+    let mind = [];
+    var yestoday = '2018-12-17 09:10:00';
     this._OrderServesService
-      .getOrders("", 0, 0, "", "", " ", "", "", "", "", yestoday, "", "")
-      .subscribe((res) => {
-        var length = 0;
-        for (let i in res) {
-          length++;
-        }
-        this.orders = res;
-        this.orderTotal = length * this.multiple;
-      })
-  }
-  // getTotalOwner() {
-  //   this._OrderServesService
-  //     .getOwners()
-  //     .subscribe((res) => {
-  //       let length = 0;
-  //       for (let i in res) {
-  //         length++;
-  //       }
-  //       this.ownerTotal = length;
-  //     })
-  // }
-  getState() {
-    this.stateArray = [];
-    let send = 0, fuhe = 0, jianhuo = 0, pool=0;
-    // 已发运
-    for (let i in this.orders) {
-      if (this.orders[i]['trailingSts'] == '900') {
-        send++;
-      }
-    }
-    this.stateArray.push({ name: '已发运', total: send * this.multiple });
-    // 待复核
-    for (let i in this.orders) {
-      if (this.orders[i]['trailingSts'] == '700') {
-        fuhe++;
-      }
-    }
-    this.stateArray.push({ name: '待复核', total: fuhe * this.multiple });
-    // 待拣货
-    for (let i in this.orders) {
-      if (this.orders[i]['trailingSts'] == '300') {
-        jianhuo++;
-      }
-    }
-    this.stateArray.push({ name: '待拣货', total: jianhuo * this.multiple });
-    // 订单池
-    for (let i in this.orders) {
-      if (this.orders[i]['trailingSts'] == '100') {
-        pool++;
-      }
-    }
-    this.stateArray.push({ name: '订单池', total: pool * this.multiple });
-  }
-  // getOrderByOwner() {
-  //   var yestoday = this._OrderServesService.formatTime(new Date());
-  //   this.ownerOrder = [];
-  //   this.fiveOwnerOrder = []
-  //   this._OrderServesService
-  //     .getOwners()
-  //     .subscribe((result) => {
-  //       for (let i in result) {
-  //         for (let j in result[i]) {
-  //           this._OrderServesService
-  //             .getOrders(result[i][j], 0, 0, "", '', " ", "", "", "", "", yestoday, "", "")
-  //             .subscribe((res) => {
-  //               let length = 0;
-  //               for (let k in res)
-  //                 length++;
-  //               this.ownerOrder.push({ 'name': result[i][j], 'total': length * this.multiple })
-  //               this.ownerOrder.sort(this.sortTotal);
-  //               this.fiveOwnerOrder = this.ownerOrder.concat();
-  //               this.fiveOwnerOrder.splice(6);
-  //             })
-  //         }
-  //       }
-  //     })
-  // }
+      .GetEachStatusOrderAmount(this._OrderServesService.rCreateTime(), 'lk01')
+      .subscribe((r1) => {
+        mind = r1['result']
+        this._OrderServesService
+          .GetEachStatusOrderAmount(this._OrderServesService.rCreateTime(), 'lk02')
+          .subscribe((r2) => {
+            for (let i = 0; i < 9; i++) {
+              mind[i]['amount'] += r2['result'][i]['amount'];
+            }
+            this.countArray = mind.concat();
+            this.getState();
+          })
 
+      });
+
+
+  }
+  getRandState(){
+    this.orderTotal=this._OrderServesService.getRand()*239;
+    this.stateArray[0]=this._OrderServesService.getRand()*239;
+    this.stateArray[1]=this._OrderServesService.getRand()*239;
+    this.stateArray[2]=this._OrderServesService.getRand()*239;
+  }
+  getState() {
+    this.stateArray = []; this.orderTotal = 0;
+    let send = 0, jianhuo = 0, pool = 0;
+    for (let i = 0; i < this.countArray.length; i++) {
+      this.orderTotal += this.countArray[i]['amount'];
+      if (i == 0) {
+        pool += this.countArray[i]['amount'];
+      }
+      if (i > 0 && i < 6) {
+        jianhuo += this.countArray[i]['amount'];
+      }
+      if (i >= 6) {
+        send += this.countArray[i]['amount'];
+      }
+    }
+    this.orderTotal *= this.multiple;
+    this.stateArray[0] = send * this.multiple;
+    this.stateArray[1] = jianhuo * this.multiple;
+    this.stateArray[2] = pool * this.multiple;
+  }
 
   sortTotal(a, b) {
     return b.total - a.total
   }
-
 }

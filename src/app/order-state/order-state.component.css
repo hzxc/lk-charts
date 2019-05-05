@@ -1,14 +1,9 @@
-/* select{
-    position: absolute;
-    right: 5%;
-} */
-
 p{
     text-align: center
 }
 .number{
     position:absolute;
-    left:30px;
+    left:13px;
     top:30%; 
 }
 .container{

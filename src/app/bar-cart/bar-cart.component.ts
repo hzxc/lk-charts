@@ -8,71 +8,64 @@ import * as  echarts from 'echarts';
   templateUrl: './bar-cart.component.html',
   styleUrls: ['./bar-cart.component.css']
 })
-export class BarCartComponent implements OnInit, OnDestroy {
-
+export class BarCartComponent implements OnInit {
 
   @Input()
-  private orders;
+   multiple;
+  @Input()
+   countArray;
 
-  private timer1;
-  private option;
+   timer;
+   option;
+
 
   constructor(
     private _OrderServesService: OrderServesService
   ) { }
 
   ngOnInit(): void {
-    var timer;
-    timer = setInterval(() => {
-      if (this.orders != undefined) {
-        this.getState();
-        clearInterval(timer);
-      }
-    }, 500);
-    this.timer1 = setInterval(() => {
-        this.getState();
-    }, 30000);
-  }
-  ngOnDestroy(): void {
-    clearInterval(this.timer1)
-  }
-  getState() {
-    var stateArray = [];
-    var label = [];
-    var data = [];
-    var yesterday = this._OrderServesService.formatTime(new Date());
-    // 已发运
+    var timer1;
+    timer1 = setInterval(() => {
+      this.getRandState();
+      if (this.countArray.length>1) {
+        // this.getState();
+        clearInterval(timer1);
 
-    for (let j in this.orders) {
-      stateArray.push(this.orders[j]['trailingSts']);
-    }
-    stateArray = this._OrderServesService.unique(stateArray).concat();
-    stateArray.sort(this.sortTotal);
-    var dataArray: number[] = new Array(stateArray.length);
-    for (let j = 0; j < stateArray.length; j++) {
-      dataArray[j] = 0;
-    }
-    for (let i in this.orders) {
-      for (let j = 0; j < stateArray.length; j++) {
-        if (this.orders[i]['trailingSts'] == stateArray[j]) {
-          dataArray[j]++;
-        }
+        this.timer = setInterval(() => {
+          // this.getState();
+          this.getRandState();
+        }, 1000*60*5)
+
       }
+    }, 5000)
+  }
+
+  getRandState(){
+    var dataArray = [];
+    for(let i=0;i<9;i++){
+      dataArray.push(this._OrderServesService.getRand());    
     }
-    for (let j = 0; j < stateArray.length; j++) {
-      if (stateArray[j] == '100') stateArray[j] = '订单池';
-      if (stateArray[j] == '200') stateArray[j] = '波次中';
-      if (stateArray[j] == '201') stateArray[j] = '201';
-      if (stateArray[j] == '300') stateArray[j] = '待拣货';
-      if (stateArray[j] == '700') stateArray[j] = '待复核';
-      if (stateArray[j] == '800') stateArray[j] = '已复核';
-      if (stateArray[j] == '850') stateArray[j] = '待发运';
-      if (stateArray[j] == '900') stateArray[j] = '已发运';
-    }
+
     var myChart = echarts.init(document.getElementById('state'));
     this.chartInit();
-    this.option.xAxis[0].data = stateArray.concat();
     this.option.series[0].data = dataArray.concat();
+    this.option.series[1].data = dataArray.concat();
+    myChart.setOption(this.option);
+
+  }
+
+  getState() {
+    var dataArray = [];
+    var yestoday = this._OrderServesService.rCreateTime();
+    //处理倍数
+    for (let i = 0; i < this.countArray.length; i++) {
+      dataArray[i] = this.countArray[i]['amount'] * this.multiple;
+    }
+
+    var myChart = echarts.init(document.getElementById('state'));
+    this.chartInit();
+    this.option.series[0].data = dataArray.concat();
+    this.option.series[1].data = dataArray.concat();
     myChart.setOption(this.option);
   }
   chartInit() {
@@ -80,29 +73,23 @@ export class BarCartComponent implements OnInit, OnDestroy {
       tooltip: {
         trigger: 'axis'
       },
-      toolbox: {
-        show: true,
-        feature: {
-          magicType: { show: true, type: ['line', 'bar'] },
-          restore: { show: true },
-        }
-      },
       grid: {
         left: '0%',
-        right: '0%',
+        right: '10%',
         bottom: '0%',
-        top: '11%',
+        top: '10%',
         containLabel: true
       },
       calculable: true,
       xAxis: [
         {
           type: 'category',
-          data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+          data: ['订单池', '波次中', '待拣货', '拣货完', '验货完', '称重完', '集货', '装载', '已发运'],
           axisLabel: {
             show: true,
             textStyle: {
-              color: '#ccc'
+              color: '#ccc',
+              fontSize: 5
             }
           }
         }
@@ -113,13 +100,14 @@ export class BarCartComponent implements OnInit, OnDestroy {
           axisLabel: {
             show: true,
             textStyle: {
-              color: '#ccc'
+              color: '#ccc',
+              fontSize: 7
             }
           },
           splitLine: {
             show: true,
             lineStyle: {
-              color: '#514D97'
+              color: '#172449'
             }
           }
         }
@@ -128,23 +116,41 @@ export class BarCartComponent implements OnInit, OnDestroy {
         {
           name: '单数',
           type: 'bar',
-          data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
           itemStyle: {
             normal: {
               color: function (params) {
                 // build a color map as your need.
                 var colorList = [
-                  '#C1232B', '#B5C334', '#FCCE10', '#E87C25',
-                  '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
-                  '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'
+                  '#01FFFD',
                 ];
                 return colorList[params.dataIndex]
               }, label: {
                 show: true,
                 position: 'top',
-                formatter: '{c}'
+                formatter: '{c}',
+                fontSize: 7
               }
             }
+          },
+          barWidth: '30%'
+        },
+        {
+          type: 'line',
+          color: "#9DC4FA", //折线图颜色,搭配markArea为面积图
+          lineStyle: { //折线的颜色
+            color: "#3B9DFC"
+          },
+          smooth: true, //是否平滑处理值0-1,true相当于0.5
+          data: [67, 30, 70, 40, 50, 25, 30, 25, 34, 45, 51, 43, 38],
+          markArea: {
+            data: [
+              [{
+                xAxis: '08:00'
+              }, {
+                xAxis: '19:59'
+              }]
+            ]
           }
         }
       ]

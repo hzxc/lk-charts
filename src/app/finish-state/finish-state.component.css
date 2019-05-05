@@ -1,3 +1,43 @@
-mat-progress-bar{
+mat-progress-bar {
     margin-top: 10px;
+}
+
+.container {
+    padding-left: 1%;
+    text-align: center;
+    height: 100%
+}
+
+ul,
+li div {
+    color: #D6D7DB;
+    height: 100%
+}
+
+ul li {
+    line-height: 3.3vh;
+    display: flex;
+    height: 13%;
+}
+
+ul li.list {
+    background: #0A2341;
+    margin-top: 0.7%
+}
+
+img {
+    height: 60%;
+    margin-top: 5%
+}
+
+li div {
+    display: flex
+}
+
+.blue {
+    color: #07A6FF
+}
+
+.orange {
+    color: #F2CF76
 }

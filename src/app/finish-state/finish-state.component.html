@@ -1,10 +1,23 @@
-<div>
-  <ul>
-    <li *ngFor="let Order of fiveSendOrder">
-      <span fxFlex="25">{{Order.name}}</span>
-      <span fxFlex="25">{{Order.total}}</span>
-      <mat-progress-bar fxFlex="35" [color]="warn" mode="determinate" value="{{(Order.send/Order.total).toFixed(2)*100}}" color="primary"></mat-progress-bar>
-      <span fxFlexOffset="5"  fxFlex="10">{{((Order.send/Order.total)*100).toFixed(0)+'%'}}</span>
-    </li>   
-  </ul>
+<div class="container">
+    <ul style="font-size:8px !important">
+        <li>
+            <span fxFlex="20">商家</span>
+            <span fxFlex="18">总单量</span>
+            <span fxFlex="35">完成指数</span>
+            <span fxFlexOffset="5" fxFlex="22">完成占比</span>
+        </li>
+        <li *ngFor="let Order of fiveSendOrder;let i=index;" class="list">
+            <span fxFlex="20" class="green">{{Order.ownerCode}}</span>
+            <span fxFlex="18" class="blue">{{Order.amount}}</span>
+            <div fxFlex="35">
+                <div *ngFor="let a of Order.solid;">
+                    <img src="../../assets/images/star/star{{i+1}}2.png" alt="">
+                </div>
+                <div *ngFor="let b of Order.empty">
+                    <img src="../../assets/images/star/empty.png" alt="">
+                </div>
+            </div>
+            <span class="orange" fxFlexOffset="5" fxFlex="22">{{((Order.orderStatusList[0]['count']/Order.amount)*100).toFixed(0)+'%'}}</span>
+        </li>
+    </ul>
 </div>

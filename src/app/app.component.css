@@ -1,46 +1,142 @@
-#header{
-    background: #464298;
+/* new new new new  */
+
+.red {
+    border: 1px solid red;
 }
-#header span{
+
+#head {
+    /* padding-top:2%; */
+}
+
+#head .images {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 1%
+}
+
+#head .images img {
+    width: 30%;
+}
+
+#head .title {
     position: absolute;
-    right:3%;
-    /* margin-top: 2%; */
-    font-size: 3vh;
-    color: #2FC1E1;
-}
-mat-card{
-    margin-top: 1%;
-    padding: 10px !important;
-}
-mat-card-title{
-    color: #2FC1E1;
-    font-size: 2vh !important;
-}
-.blue{
-    color: #2FC1E1;
-}
-.red{
-    color: orange;
-}
-.orange{
-    color: #C1A856;
-}
-.border{
-    border-radius: 5px;
-    border: 1px solid #333;
-}
-ul{
-    list-style: none;
-    padding: 0;
-    line-height:3.6vh;
-}
-.iconFont{
-    font-size:10vh;
-}
-.center{
+    top: 2%;
+    width: 24%;
     text-align: center;
+    left: 38%;
+    background-image: -webkit-linear-gradient(bottom, rgb(130, 210, 228), rgb(230, 230, 231));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
-.right{
-    position: absolute;
-    right:25px;     
+
+#body {
+    display: flex;
+    padding-left: 1.2%;
+    padding-right: 1.2%;
+    box-sizing: border-box
+}
+
+#body .bodyLeft,
+#body .bodyRight {
+    width: 25%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#body .bodyLeft>div {
+    height: 50%;
+}
+
+#body .bodyRight>div:nth-of-type(1) {
+    height: 38%;
+}
+
+#body .bodyRight>div:nth-of-type(2) {
+    height: 62%;
+}
+
+
+/* 
+#body .bodyRight>div:nth-of-type(2),
+#body .bodyRight>div:nth-of-type(3) {
+    height: 28%;
+} */
+
+#body .bodyMid {
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.card {
+    background-image: url(../assets/images/card-header.png);
+    background-position: left 3%;
+    background-repeat: no-repeat;
+    height: 100%;
+    background-size: 110%;
+}
+
+.card .cardHead {
+    height: 15%;
+}
+
+.card .cardBody {
+    height: 85%;
+}
+
+.card h5 {
+    color: white;
+    padding-left: 10px;
+}
+
+#body .map {
+    background: url(../assets//images/map-bg.png);
+    height: 80%;
+    width: 100%;
+    overflow: hidden;
+    background-size: 100% 118%;
+}
+
+#body .mapHead {
+    height: 20%;
+    display: flex;
+}
+
+#body .mapHead .mapHeadLabel {
+    height: 100%;
+    background: url(../assets/images/map-head-bg.png);
+    background-size: 100% 100%;
+}
+
+#body .mapHead .mapHeadLabelTotal {
+    /* width: 30%; */
+}
+
+#body .mapHead .mapHeadLabelType {
+    width: 25%;
+}
+
+#body .mapHead .title {
+    padding: 10% 0 5% 10%;
+    color: white;
+}
+
+#body .mapHead .number {
+    padding-left: 10%;
+    font-family: 'Agency FB';
+    color: #20DBFD;
+    font-size: 4vh;
+    text-shadow: 0 0 25px #20DBFD
+}
+
+#foot {
+    display: flex;
+    width: 100%;
+    margin-top: 5px;
+    box-sizing: border-box
+}
+
+#foot>div {
+    width: 33.3%;
 }

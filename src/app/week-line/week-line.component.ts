@@ -10,96 +10,17 @@ import * as  echarts from 'echarts';
 export class WeekLineComponent implements OnInit {
 
   @Input()
-  private multiple;
-  private option;
+   multiple;
+   option;
 
-  private xLabel = [];
-  private data = [];
+   xLabel = [];
+   data = [];
 
   constructor(
     private _OrderServesService: OrderServesService
   ) { }
 
   ngOnInit() {
-    this.getOrder();
-    this.getProduct();
-
-  }
-
-  getOrder() {
-    var xLabel = [];
-    var data = [];
-    var dateArray = [];
-    var newDateArray = [];
-    var myChart = echarts.init(document.getElementById('line'));
-    var today = new Date();
-    var ymd = new Date(today.setDate(today.getDate() - 11));
-    for (let i = 0; i < 10; i++) {
-      ymd = new Date(ymd.setDate(ymd.getDate() + 1));
-      let yestoday = new Date(ymd);
-      yestoday.setDate(yestoday.getDate() - 1);
-      var str = ymd.getFullYear() + "-" + (ymd.getMonth() + 1) + "-" + ymd.getDate();
-      var str1 = yestoday.getFullYear() + "-" + (yestoday.getMonth() + 1) + "-" + (yestoday.getDate());
-      dateArray.push(str);
-      newDateArray.push(str1)
-    }
-    for (let j = 0; j < dateArray.length; j++) {
-      this._OrderServesService
-        .getOrders("", 0, 0, "", "", " ", "", "", "", "", newDateArray[j] + "  16:00:00", "", dateArray[j] + "  16:00:00")
-        .subscribe((res) => {          
-          var length = 0;
-          for (let j in res) {
-            length++;
-          }
-          xLabel[j] = (dateArray[j].substr(7) + '日');
-          data[j] = (length);
-          this.xLabel = xLabel;
-          this.data = data;
-        })
-    }
-    this.getProduct();
-  }
-
-  getProduct() {
-    var myChart = echarts.init(document.getElementById('line'));
-    let dayArray = [];
-    let dateArray = [];
-    var now = new Date();
-    now.setDate(now.getDate() - 12);
-    var yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    var day = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " 00:00:00";
-    var endDay = yesterday.getFullYear() + '-' + (yesterday.getMonth() + 1) + '-' + (yesterday.getDate()) + " 23:59:59"
-
-    var ymd = new Date(new Date().setDate(new Date().getDate() - 11));
-    for (let i = 0; i < 10; i++) {
-      ymd = new Date(ymd.setDate(ymd.getDate() + 1));
-      var str = ymd.getFullYear() + "-";
-      var str1 = [((ymd.getMonth() + 1) < 10) ? '0' + (ymd.getMonth() + 1) : (ymd.getMonth() + 1)] + "-"
-      var str2 = (ymd.getDate() < 10) ? '0' + ymd.getDate() : ymd.getDate();
-      dayArray.push(str + str1 + str2);
-    }
-    for (let j = 0; j < dayArray.length; j++) {
-      dateArray[j] = 0
-    }
-    this._OrderServesService
-      .getOrders("", 0, 0, "", "", "","", "", "", "", day, "", endDay)
-      .subscribe((res) => {
-        for (let i in res) {
-          for (let k = 0; k < dateArray.length; k++) {
-            if (res[i]['actualShipDateTime'] != null && (res[i]['actualShipDateTime']).indexOf(dayArray[k]) >= 0) {
-              dateArray[k]++;
-              break;
-            }
-          }
-        }
-        this.chartInit();
-        this.option.xAxis[0].data = this.xLabel;
-        this.option.series[0].data = this.data;
-        this.option.series[1].data = dateArray;
-        myChart.setOption(this.option);
-      })
   }
 
   chartInit() {
@@ -111,11 +32,12 @@ export class WeekLineComponent implements OnInit {
             color: '#57617B'
           }
         },
-        backgroundColor: 'rgba(255,255,255,1)',
-        padding: [5, 10],
         textStyle: {
+          fontSize: 8,
           color: '#7588E4',
         },
+        backgroundColor: 'rgba(255,255,255,1)',
+        padding: [5, 10],
         extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
       },
       grid: {
@@ -125,7 +47,7 @@ export class WeekLineComponent implements OnInit {
         top: '10%',
         containLabel: true
       },
-      xAxis:[{
+      xAxis: [{
         type: 'category',
         data: [],
         boundaryGap: false,
@@ -147,12 +69,16 @@ export class WeekLineComponent implements OnInit {
         axisLabel: {
           margin: 10,
           textStyle: {
-            fontSize: 14
-          }
-        }
+            fontSize: 7
+          },
+          rotate: 45
+        },
+        nameGap: 30,
+        // boundaryGap: [0, '20%']
       }],
       yAxis: {
         type: 'value',
+        boundaryGap: [0, '100%'],
         splitLine: {
           lineStyle: {
             color: ['#464298']
@@ -169,7 +95,7 @@ export class WeekLineComponent implements OnInit {
         axisLabel: {
           margin: 10,
           textStyle: {
-            fontSize: 14
+            fontSize: 7
           }
         }
       },
@@ -180,24 +106,29 @@ export class WeekLineComponent implements OnInit {
         showSymbol: false,
         symbol: 'circle',
         symbolSize: 6,
+
         data: [],
         areaStyle: {
           normal: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            color: new echarts.graphic.LinearGradient(0, undefined, undefined, 1, [{
               offset: 0,
               color: 'rgba(199, 237, 250,0.1)'
             }, {
               offset: 1,
               color: 'rgba(199, 237, 250,0.1)'
             }], false)
-          }
+          },
         },
         markPoint: {
           data: [
             { type: 'max', name: '最大值' }
           ],
           animationDelay: 1000,
-          animationDuration: 1000
+          animationDuration: 1000,
+          symbolSize: 40,
+          label: {
+            fontSize: 8
+          }
         },
         lineStyle: {
           normal: {
@@ -211,7 +142,7 @@ export class WeekLineComponent implements OnInit {
               colorStops: [{
                 offset: 0, color: 'red' // 0% 处的颜色
               }, {
-                offset: 1, color: 'yellowgreen' // 100% 处的颜色
+                offset: 1, color: 'blue' // 100% 处的颜色
               }],
               globalCoord: false // 缺省为 false
             },
@@ -238,7 +169,11 @@ export class WeekLineComponent implements OnInit {
             { type: 'max', name: '最大值' }
           ],
           animationDelay: 2000,
-          animationDuration: 1000
+          animationDuration: 1000,
+          symbolSize: 40,
+          label: {
+            fontSize: 8
+          }
         },
         lineStyle: {
           normal: {
